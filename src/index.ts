@@ -21,7 +21,7 @@ app.use(
 app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/devices', deviceRoutes);
-app.use('/api/tickets', ticketsRoutes)
+app.use('/api/tickets', ticketsRoutes);
 
 const startServer = async () => {
   try {
