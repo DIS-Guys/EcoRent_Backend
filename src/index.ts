@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import connectDB from './config/db';
 import authRoutes from './routes/userRouter';
+import deviceRoutes from './routes/deviceRouter';
 import ticketsRoutes from './routes/ticketRouter';
 
 dotenv.config();
@@ -19,6 +20,7 @@ app.use(
 );
 app.use(express.json());
 app.use('/api/auth', authRoutes);
+app.use('/api/devices', deviceRoutes);
 app.use('/api/tickets', ticketsRoutes)
 
 const startServer = async () => {
