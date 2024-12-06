@@ -16,7 +16,12 @@ export const createDevice = async (req: Request, res: Response) => {
     batteryType,
     outputSignalForm,
     additional,
-    deviceImages,
+    images,
+    price,
+    isInRent,
+    minRentTerm,
+    maxRentTerm,
+    ownerId,
   } = req.body;
 
   try {
@@ -34,7 +39,12 @@ export const createDevice = async (req: Request, res: Response) => {
       batteryType,
       outputSignalForm,
       additional,
-      deviceImages,
+      images,
+      price,
+      isInRent,
+      minRentTerm,
+      maxRentTerm,
+      ownerId,
     });
     await newDevice.save();
 

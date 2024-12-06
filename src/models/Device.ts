@@ -14,7 +14,12 @@ export interface IDevice extends Document {
   batteryType: string;
   outputSignalForm: string;
   additional: string;
-  deviceImages: string[];
+  images: string[];
+  price: number[];
+  isInRent: boolean;
+  minRentTerm: number;
+  maxRentTerm: number;
+  ownerId: string;
 }
 
 const DeviceSchema: Schema = new Schema({
@@ -31,7 +36,12 @@ const DeviceSchema: Schema = new Schema({
   batteryType: { type: String, required: true },
   outputSignalForm: { type: String, required: true },
   additional: { type: String, required: true },
-  deviceImages: { type: [String], required: true },
+  images: { type: [String], required: true },
+  price: { type: Number, required: true },
+  isInRent: { type: Boolean, required: true },
+  minRentTerm: { type: Number, required: true },
+  maxRentTerm: { type: Number, required: true },
+  ownerId: { type: String, required: true },
 });
 
 export default mongoose.model<IDevice>('Device', DeviceSchema);
