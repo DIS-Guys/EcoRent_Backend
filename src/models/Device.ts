@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document } from 'mongoose';
+import mongoose, { Schema, Document, Types } from 'mongoose';
 
 export interface IDevice extends Document {
   manufacturer: string;
@@ -15,11 +15,11 @@ export interface IDevice extends Document {
   outputSignalForm: string;
   additional: string;
   images: string[];
-  price: number[];
+  price: number;
   isInRent: boolean;
   minRentTerm: number;
   maxRentTerm: number;
-  ownerId: string;
+  ownerId: Types.ObjectId;
 }
 
 const DeviceSchema: Schema = new Schema({
@@ -41,7 +41,7 @@ const DeviceSchema: Schema = new Schema({
   isInRent: { type: Boolean, required: true },
   minRentTerm: { type: Number, required: true },
   maxRentTerm: { type: Number, required: true },
-  ownerId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  ownerId: { type: Types.ObjectId, ref: 'User' },
 });
 
 export default mongoose.model<IDevice>('Device', DeviceSchema);
