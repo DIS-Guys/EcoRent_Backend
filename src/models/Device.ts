@@ -41,7 +41,7 @@ const DeviceSchema: Schema = new Schema({
   isInRent: { type: Boolean, required: true },
   minRentTerm: { type: Number, required: true },
   maxRentTerm: { type: Number, required: true },
-  ownerId: { type: String, required: true },
+  ownerId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
 });
 
 export default mongoose.model<IDevice>('Device', DeviceSchema);
