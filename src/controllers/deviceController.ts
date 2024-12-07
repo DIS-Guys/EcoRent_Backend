@@ -72,7 +72,7 @@ export const getDevice = async (req: Request, res: Response) => {
 
 export const getAllDevices = async (req: Request, res: Response) => {
   try {
-    const devices = await Device.find();
+    const devices = await Device.find().populate('ownerId', 'town');
 
     res.status(200).json(devices);
   } catch (error) {
