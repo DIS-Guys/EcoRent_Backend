@@ -1,4 +1,5 @@
 import AWS from 'aws-sdk';
+import { v4 as uuidv4 } from "uuid";
 
 const s3 = new AWS.S3({
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
@@ -6,4 +7,13 @@ const s3 = new AWS.S3({
   region: process.env.AWS_REGION,
 });
 
-export default s3;
+export const uploadToS3 = (file: Express.Multer.File) => {
+  const params: AWS.S3.Types.PutObjectRequest = {
+    Bucket: 'eco-rent-images',
+    Key: `${uuidv4()}-${file.originalname}`,
+    Body: file.buffer,
+    ContentType: file.mimetype,
+  };
+
+  return s3.upload(params).promise();
+};
