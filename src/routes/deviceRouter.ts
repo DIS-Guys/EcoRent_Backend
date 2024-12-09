@@ -2,7 +2,7 @@ import express from 'express';
 import multer from 'multer';
 
 import {
-  createDevice,
+  addDevice,
   deleteDevice,
   getAllDevices,
   getDevice,
@@ -22,9 +22,9 @@ const upload = multer({
 });
 
 router.post(
-  '/createDevice',
+  '/addDevice',
   upload.array('images', 10),
-  createDevice as express.RequestHandler
+  addDevice as express.RequestHandler
 );
 router.get('/getDevice/:id', getDevice as express.RequestHandler);
 router.get('/getAllDevices', getAllDevices as express.RequestHandler);

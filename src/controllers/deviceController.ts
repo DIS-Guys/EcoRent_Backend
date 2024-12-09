@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
 import Device, { IDevice } from '../models/Device';
 import { parseFormData } from '../utils/parseFormData';
-import { uploadToS3 } from '../config/s3';
+import { deleteFromS3, uploadToS3 } from '../config/s3';
 
-export const createDevice = async (req: Request, res: Response) => {
+export const addDevice = async (req: Request, res: Response) => {
   const deviceInfo = req.body;
   const deviceImages = req.files;
 
@@ -12,7 +12,7 @@ export const createDevice = async (req: Request, res: Response) => {
     const uploadedImages = await Promise.all(
       (deviceImages as Express.Multer.File[]).map((file) => uploadToS3(file))
     );
-    const imageUrls = uploadedImages.map(image => image.Location);
+    const imageUrls = uploadedImages.map((image) => image.Location);
 
     const device: IDevice = new Device({
       ...parsedDevice,
@@ -20,7 +20,7 @@ export const createDevice = async (req: Request, res: Response) => {
     });
     await device.save();
 
-    res.status(201).json({ message: 'Device created', device });
+    res.status(201).json({ message: 'Device added', device });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error });
   }
@@ -75,15 +75,17 @@ export const deleteDevice = async (req: Request, res: Response) => {
   const { id } = req.params;
 
   try {
-    const deletedDevice = await Device.findByIdAndDelete(id);
+    const device = await Device.findById(id);
 
-    if (!deletedDevice) {
-      return res.status(404).json({ message: 'device not found' });
+    if (!device) {
+      throw new Error('Device not found');
     }
 
-    res
-      .status(200)
-      .json({ message: 'Device deleted successfully', deletedDevice });
+    const images = device.images;
+    await Promise.all(images.map((url) => deleteFromS3(url)));
+    await Device.findByIdAndDelete(id);
+
+    res.status(200).json({ message: 'Device deleted successfully' });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error });
   }
