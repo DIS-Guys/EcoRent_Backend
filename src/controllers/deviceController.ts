@@ -1,54 +1,26 @@
 import { Request, Response } from 'express';
 import Device, { IDevice } from '../models/Device';
+import { parseFormData } from '../utils/parseFormData';
+import { deleteFromS3, uploadToS3 } from '../config/s3';
 
-export const createDevice = async (req: Request, res: Response) => {
-  const {
-    manufacturer,
-    deviceModel,
-    state,
-    batteryCapacity,
-    weight,
-    typeC,
-    typeA,
-    sockets,
-    remoteUse,
-    sizeXYZ,
-    batteryType,
-    outputSignalForm,
-    additional,
-    images,
-    price,
-    isInRent,
-    minRentTerm,
-    maxRentTerm,
-    ownerId,
-  } = req.body;
+export const addDevice = async (req: Request, res: Response) => {
+  const deviceInfo = req.body;
+  const deviceImages = req.files;
 
   try {
-    const newDevice: IDevice = new Device({
-      manufacturer,
-      deviceModel,
-      state,
-      batteryCapacity,
-      weight,
-      typeC,
-      typeA,
-      sockets,
-      remoteUse,
-      sizeXYZ,
-      batteryType,
-      outputSignalForm,
-      additional,
-      images,
-      price,
-      isInRent,
-      minRentTerm,
-      maxRentTerm,
-      ownerId,
-    });
-    await newDevice.save();
+    const parsedDevice = parseFormData(deviceInfo);
+    const uploadedImages = await Promise.all(
+      (deviceImages as Express.Multer.File[]).map((file) => uploadToS3(file))
+    );
+    const imageUrls = uploadedImages.map((image) => image.Location);
 
-    res.status(201).json({ message: 'Device created' });
+    const device: IDevice = new Device({
+      ...parsedDevice,
+      images: imageUrls,
+    });
+    await device.save();
+
+    res.status(201).json({ message: 'Device added', device });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error });
   }
@@ -103,15 +75,17 @@ export const deleteDevice = async (req: Request, res: Response) => {
   const { id } = req.params;
 
   try {
-    const deletedDevice = await Device.findByIdAndDelete(id);
+    const device = await Device.findById(id);
 
-    if (!deletedDevice) {
-      return res.status(404).json({ message: 'device not found' });
+    if (!device) {
+      throw new Error('Device not found');
     }
 
-    res
-      .status(200)
-      .json({ message: 'Device deleted successfully', deletedDevice });
+    const images = device.images;
+    await Promise.all(images.map((url) => deleteFromS3(url)));
+    await Device.findByIdAndDelete(id);
+
+    res.status(200).json({ message: 'Device deleted successfully' });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error });
   }
