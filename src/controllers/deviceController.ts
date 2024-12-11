@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import Device, { IDevice } from '../models/Device';
 import { parseFormData } from '../utils/parseFormData';
 import { deleteFromS3, uploadToS3 } from '../config/s3';
+import User from "../models/User";
 
 export const addDevice = async (req: Request, res: Response) => {
   const deviceInfo = req.body;
@@ -30,13 +31,13 @@ export const getDevice = async (req: Request, res: Response) => {
   const { id } = req.params;
 
   try {
-    const device = await Device.findById(id);
-
-    if (!device) {
-      return res.status(404).json({ message: 'Device not found' });
-    }
+    const device = await Device.findById(id).populate({
+      path: 'ownerId',
+      select: 'name surname town',
+    });
 
     res.status(200).json({ device });
+
   } catch (error) {
     res.status(500).json({ message: 'Server error', error });
   }
