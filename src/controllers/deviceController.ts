@@ -45,7 +45,7 @@ export const getDevice = async (req: Request, res: Response) => {
       select: 'name surname town',
     });
 
-    res.status(200).json({ device });
+    res.status(200).json(device);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error });
   }
