@@ -40,13 +40,13 @@ export const getDevice = async (req: Request, res: Response) => {
   const { id } = req.params;
 
   try {
-    const device = await Device.findById(id);
-
-    if (!device) {
-      return res.status(404).json({ message: 'Device not found' });
-    }
+    const device = await Device.findById(id).populate({
+      path: 'ownerId',
+      select: 'name surname town',
+    });
 
     res.status(200).json({ device });
+
   } catch (error) {
     res.status(500).json({ message: 'Server error', error });
   }
