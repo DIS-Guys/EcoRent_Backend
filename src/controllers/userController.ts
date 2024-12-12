@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import User, { IUser } from '../models/User';
+import Device from '../models/Device';
 
 export const createUser = async (req: Request, res: Response) => {
   const { name, surname, email, password } = req.body;
@@ -54,7 +55,7 @@ export const deleteUser = async (req: Request, res: Response) => {
 
   try {
     const deletedUser = await User.findByIdAndDelete(id);
-
+    await Device.deleteMany({ ownerId: id });
     if (!deletedUser) {
       return res.status(404).json({ message: 'User not found' });
     }
