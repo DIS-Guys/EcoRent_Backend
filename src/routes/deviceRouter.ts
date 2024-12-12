@@ -8,6 +8,7 @@ import {
   getDevice,
   updateDevice,
 } from '../controllers/deviceController';
+import { authenticateToken } from '../middlewares/authMiddleware';
 
 const router = express.Router();
 const upload = multer({
@@ -24,6 +25,7 @@ const upload = multer({
 router.post(
   '/addDevice',
   upload.array('images', 10),
+  authenticateToken as express.RequestHandler,
   addDevice as express.RequestHandler
 );
 router.get('/getDevice/:id', getDevice as express.RequestHandler);
