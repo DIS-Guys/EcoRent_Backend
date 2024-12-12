@@ -6,6 +6,7 @@ import {
   deleteDevice,
   getAllDevices,
   getDevice,
+  getDevicesByOwnerId,
   updateDevice,
 } from '../controllers/deviceController';
 import { authenticateToken } from '../middlewares/authMiddleware';
@@ -29,6 +30,11 @@ router.post(
   addDevice as express.RequestHandler
 );
 router.get('/getDevice/:id', getDevice as express.RequestHandler);
+router.get(
+  '/getOwnerDevices',
+  authenticateToken as express.RequestHandler,
+  getDevicesByOwnerId as express.RequestHandler
+);
 router.get('/getAllDevices', getAllDevices as express.RequestHandler);
 router.put('/updateDevice/:id', updateDevice as express.RequestHandler);
 router.delete('/deleteDevice/:id', deleteDevice as express.RequestHandler);
