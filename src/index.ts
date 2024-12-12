@@ -5,6 +5,7 @@ import connectDB from './config/db';
 import authRoutes from './routes/userRouter';
 import deviceRoutes from './routes/deviceRouter';
 import ticketsRoutes from './routes/ticketRouter';
+import paymentCardRoutes from "./routes/paymentCardRouter";
 
 dotenv.config();
 
@@ -21,6 +22,7 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/devices', deviceRoutes);
 app.use('/api/tickets', ticketsRoutes);
+app.use('/api/paymentCards', paymentCardRoutes);
 
 const startServer = async () => {
   try {
