@@ -81,8 +81,8 @@ export const authenticateUser = async (req: Request, res: Response) => {
 
     const token = jwt.sign(
       { id: user._id, name: user.name, surname: user.surname },
-      process.env.JWT_SECRET || 'secret',
-      { expiresIn: '1h' }
+      process.env.JWT_SECRET as string,
+      { expiresIn: '2 days' }
     );
 
     res.json({ token, message: 'Успішний вхід' });
