@@ -38,7 +38,7 @@ export const getPaymentCardsByOwnerId = async (req: Request, res: Response) => {
       return res.status(404).json({ message: 'PaymentCards not found' });
     }
 
-    res.status(200).json({ paymentCards });
+    res.status(200).json(paymentCards);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error });
   }
