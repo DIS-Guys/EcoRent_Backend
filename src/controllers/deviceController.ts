@@ -42,7 +42,7 @@ export const getDevice = async (req: Request, res: Response) => {
   try {
     const device = await Device.findById(id).populate({
       path: 'ownerId',
-      select: 'name surname town',
+      select: 'name surname town street region',
     });
 
     res.status(200).json(device);
