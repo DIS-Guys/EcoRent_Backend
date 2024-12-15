@@ -57,12 +57,6 @@ export const getDevicesByOwnerId = async (req: Request, res: Response) => {
   try {
     const devices = await Device.find({ ownerId });
 
-    if (!devices.length) {
-      return res
-        .status(404)
-        .json({ message: 'No devices found for this owner' });
-    }
-
     res.status(200).json(devices);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error });
