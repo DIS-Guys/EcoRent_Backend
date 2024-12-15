@@ -17,7 +17,11 @@ router.get(
   authenticateToken as express.RequestHandler,
   getUser as express.RequestHandler
 );
-router.put('/updateUser', authenticateToken as express.RequestHandler, updateUser as express.RequestHandler);
+router.put(
+  '/updateUser',
+  authenticateToken as express.RequestHandler,
+  updateUser as express.RequestHandler
+);
 router.delete(
   '/deleteUser',
   authenticateToken as express.RequestHandler,

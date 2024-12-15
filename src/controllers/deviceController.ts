@@ -30,9 +30,9 @@ export const addDevice = async (req: Request, res: Response) => {
     });
     await device.save();
 
-    res.status(201).json({ message: 'Device added' });
+    res.status(201).json({ message: 'Пристрій додано.' });
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error });
+    res.status(500).json({ message: 'Помилка сервера.', error });
   }
 };
 
@@ -47,7 +47,7 @@ export const getDevice = async (req: Request, res: Response) => {
 
     res.status(200).json(device);
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error });
+    res.status(500).json({ message: 'Помилка сервера.', error });
   }
 };
 
@@ -59,7 +59,7 @@ export const getDevicesByOwnerId = async (req: Request, res: Response) => {
 
     res.status(200).json(devices);
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error });
+    res.status(500).json({ message: 'Помилка сервера.', error });
   }
 };
 
@@ -69,7 +69,7 @@ export const getAllDevices = async (req: Request, res: Response) => {
 
     res.status(200).json(devices);
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error });
+    res.status(500).json({ message: 'Помилка сервера.', error });
   }
 };
 
@@ -83,12 +83,12 @@ export const updateDevice = async (req: Request, res: Response) => {
     });
 
     if (!updatedDevice) {
-      return res.status(404).json({ message: 'Device not found' });
+      return res.status(404).json({ message: 'Пристрій не знайдено.' });
     }
 
-    res.status(200).json({ message: 'Device updated', updatedDevice });
+    res.status(200).json({ message: 'Дані пристрою оновлено.', updatedDevice });
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error });
+    res.status(500).json({ message: 'Помилка сервера.', error });
   }
 };
 
@@ -99,15 +99,15 @@ export const deleteDevice = async (req: Request, res: Response) => {
     const device = await Device.findById(id);
 
     if (!device) {
-      throw new Error('Device not found');
+      throw new Error('Пристрій не знайдено.');
     }
 
     const images = device.images;
     await Promise.all(images.map((image) => deleteFromS3(image.url)));
     await Device.findByIdAndDelete(id);
 
-    res.status(200).json({ message: 'Device deleted successfully' });
+    res.status(200).json({ message: 'Пристрій успішно видалено.' });
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error });
+    res.status(500).json({ message: 'Помилка сервера.', error });
   }
 };

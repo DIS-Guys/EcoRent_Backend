@@ -1,16 +1,11 @@
 import { Request, Response } from 'express';
 import PaymentCard, { IPaymentCard } from '../models/PaymentCard';
 
-export const createPaymentCard = async (req: Request, res: Response) => {
-  const {
-    cardNumber,
-    expiryDate,
-    ownerName,
-    ownerId,
-  } = req.body;
+export const addPaymentCard = async (req: Request, res: Response) => {
+  const { cardNumber, expiryDate, ownerName, ownerId } = req.body;
 
   try {
-    const newPaymentCard = new PaymentCard({
+    const newPaymentCard: IPaymentCard = new PaymentCard({
       cardNumber,
       expiryDate,
       ownerName,
@@ -18,31 +13,29 @@ export const createPaymentCard = async (req: Request, res: Response) => {
     });
     await newPaymentCard.save();
 
-    res.status(201).json({ message: 'PaymentCard created'});
+    res.status(201).json({ message: 'Платіжна картка додана.' });
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error });
+    res.status(500).json({ message: 'Помилка сервера.', error });
   }
 };
 
 export const getPaymentCardsByOwnerId = async (req: Request, res: Response) => {
-  const { ownerId } = req.params;
+  const ownerId = (req as any).user.id;
 
   try {
-    if (!ownerId) {
-      return res.status(400).json({ message: 'OwnerId is required' });
-    }
-
     const paymentCards = await PaymentCard.find({ ownerId });
 
     if (paymentCards.length === 0) {
-      return res.status(404).json({ message: 'PaymentCards not found' });
+      return res
+        .status(404)
+        .json({ message: 'Користувач не має платіжних карток.' });
     }
 
     res.status(200).json(paymentCards);
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error });
+    res.status(500).json({ message: 'Помилка сервера.', error });
   }
-}
+};
 
 export const deletePaymentCard = async (req: Request, res: Response) => {
   const { id } = req.params;
@@ -51,11 +44,16 @@ export const deletePaymentCard = async (req: Request, res: Response) => {
     const deletedPaymentCard = await PaymentCard.findByIdAndDelete(id);
 
     if (!deletedPaymentCard) {
-      return res.status(404).json({ message: 'PaymentCard not found' });
+      return res.status(404).json({ message: 'Платіжну картку не знайдено.' });
     }
 
-    res.status(200).json({ message: 'PaymentCard deleted successfully!', deletedPaymentCard });
+    res
+      .status(200)
+      .json({
+        message: 'Платіжну картку успішно видалено.',
+        deletedPaymentCard,
+      });
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error });
+    res.status(500).json({ message: 'Помилка сервера.', error });
   }
 };

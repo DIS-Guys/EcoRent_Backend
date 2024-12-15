@@ -1,14 +1,22 @@
-import express from "express";
+import express from 'express';
 import {
-  createPaymentCard,
+  addPaymentCard,
   getPaymentCardsByOwnerId,
   deletePaymentCard,
 } from '../controllers/paymentCardController';
+import { authenticateToken } from '../middlewares/authMiddleware';
 
 const router = express.Router();
 
-router.post('/createPaymentCard', createPaymentCard as express.RequestHandler);
-router.get('/getPaymentCardsByOwnerId/:ownerId', getPaymentCardsByOwnerId as express.RequestHandler);
-router.delete('/deletePaymentCard/:id', deletePaymentCard as express.RequestHandler);
+router.post('/createPaymentCard', addPaymentCard as express.RequestHandler);
+router.get(
+  '/getPaymentCardsByOwnerId',
+  authenticateToken as express.RequestHandler,
+  getPaymentCardsByOwnerId as express.RequestHandler
+);
+router.delete(
+  '/deletePaymentCard/:id',
+  deletePaymentCard as express.RequestHandler
+);
 
 export default router;

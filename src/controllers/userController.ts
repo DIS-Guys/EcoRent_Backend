@@ -12,7 +12,7 @@ export const createUser = async (req: Request, res: Response) => {
     if (existingUser) {
       return res
         .status(400)
-        .json({ message: 'Користувач із таким email вже існує' });
+        .json({ message: 'Користувач із таким email вже існує.' });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -25,9 +25,9 @@ export const createUser = async (req: Request, res: Response) => {
     });
     await newUser.save();
 
-    res.status(201).json({ message: 'Користувача зареєстровано успішно' });
+    res.status(201).json({ message: 'Користувача зареєстровано успішно.' });
   } catch (error) {
-    res.status(500).json({ message: 'Помилка сервера', error });
+    res.status(500).json({ message: 'Помилка сервера.', error });
   }
 };
 
@@ -38,12 +38,12 @@ export const getUser = async (req: Request, res: Response) => {
     const user = await User.findById(id);
 
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: 'Користувача не знайдено.' });
     }
 
     res.status(200).json(user);
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error });
+    res.status(500).json({ message: 'Помилка сервера.', error });
   }
 };
 
@@ -57,12 +57,14 @@ export const updateUser = async (req: Request, res: Response) => {
     });
 
     if (!updatedUser) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: 'Користувача не знайдено.' });
     }
 
-    res.status(200).json({ message: 'User updated', updatedUser });
+    res
+      .status(200)
+      .json({ message: 'Дані користувача оновлено.', updatedUser });
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error });
+    res.status(500).json({ message: 'Помилка сервера.', error });
   }
 };
 
@@ -73,12 +75,14 @@ export const deleteUser = async (req: Request, res: Response) => {
     const deletedUser = await User.findByIdAndDelete(id);
     await Device.deleteMany({ ownerId: id });
     if (!deletedUser) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: 'Користувача не знайдено.' });
     }
 
-    res.status(200).json({ message: 'User deleted successfully', deletedUser });
+    res
+      .status(200)
+      .json({ message: 'Користувача успішно видалено.', deletedUser });
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error });
+    res.status(500).json({ message: 'Помилка сервера.', error });
   }
 };
 
@@ -88,12 +92,12 @@ export const authenticateUser = async (req: Request, res: Response) => {
   try {
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(404).json({ message: 'Користувача не знайдено' });
+      return res.status(404).json({ message: 'Користувача не знайдено.' });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(400).json({ message: 'Невірний пароль' });
+      return res.status(400).json({ message: 'Невірний пароль.' });
     }
 
     const token = jwt.sign(
@@ -102,8 +106,8 @@ export const authenticateUser = async (req: Request, res: Response) => {
       { expiresIn: '2 days' }
     );
 
-    res.json({ token, message: 'Успішний вхід' });
+    res.json({ token, message: 'Успішний вхід.' });
   } catch (error) {
-    res.status(500).json({ message: 'Помилка сервера', error });
+    res.status(500).json({ message: 'Помилка сервера.', error });
   }
 };

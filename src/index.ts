@@ -5,7 +5,7 @@ import connectDB from './config/db';
 import authRoutes from './routes/userRouter';
 import deviceRoutes from './routes/deviceRouter';
 import ticketsRoutes from './routes/ticketRouter';
-import paymentCardRoutes from "./routes/paymentCardRouter";
+import paymentCardRoutes from './routes/paymentCardRouter';
 
 dotenv.config();
 
