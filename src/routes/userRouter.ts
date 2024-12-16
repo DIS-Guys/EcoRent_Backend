@@ -5,6 +5,7 @@ import {
   getUser,
   updateUser,
   deleteUser,
+  changePassword,
 } from '../controllers/userController';
 import { authenticateToken } from '../middlewares/authMiddleware';
 
@@ -27,5 +28,10 @@ router.delete(
   authenticateToken as express.RequestHandler,
   deleteUser as express.RequestHandler
 );
+router.put(
+    '/updatePassword', authenticateToken as express.RequestHandler,
+    changePassword as express.RequestHandler
+);
+
 
 export default router;
