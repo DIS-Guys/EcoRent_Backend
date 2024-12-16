@@ -45,7 +45,7 @@ export const deletePaymentCard = async (req: Request, res: Response) => {
   const ownerId = (req as any).user.id;
 
   const paymentCard = await PaymentCard.findById(id);
-  if (paymentCard?.ownerId !== ownerId) {
+  if (paymentCard?.ownerId.toString() !== ownerId) {
     return res.status(403).json({ message: 'Відмовлено у доступі'});
   }
 
