@@ -1,8 +1,10 @@
 import { Request, Response } from 'express';
 import PaymentCard, { IPaymentCard } from '../models/PaymentCard';
+import exp from "node:constants";
 
 export const addPaymentCard = async (req: Request, res: Response) => {
-  const { cardNumber, expiryDate, ownerName, ownerId } = req.body;
+  const { cardNumber, expiryDate, ownerName } = req.body;
+  const ownerId = (req as any).user.id;
 
   try {
     const newPaymentCard: IPaymentCard = new PaymentCard({
@@ -38,7 +40,14 @@ export const getPaymentCardsByOwnerId = async (req: Request, res: Response) => {
 };
 
 export const deletePaymentCard = async (req: Request, res: Response) => {
+
   const { id } = req.params;
+  const ownerId = (req as any).user.id;
+
+  const paymentCard = await PaymentCard.findById(id);
+  if (paymentCard?.ownerId.toString() !== ownerId) {
+    return res.status(403).json({ message: 'Відмовлено у доступі'});
+  }
 
   try {
     const deletedPaymentCard = await PaymentCard.findByIdAndDelete(id);
