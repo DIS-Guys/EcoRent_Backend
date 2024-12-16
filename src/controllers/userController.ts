@@ -111,3 +111,27 @@ export const authenticateUser = async (req: Request, res: Response) => {
     res.status(500).json({ message: 'Помилка сервера.', error });
   }
 };
+
+export const changePassword = async (req: Request, res: Response) => {
+  const id = (req as any).user.id;
+  const { oldPassword, newPassword } = req.body;
+
+  try {
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({ message: 'Користувача не знайдено.' });
+    }
+
+    const isMatch = await bcrypt.compare(oldPassword, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: 'Старий пароль невірний.' });
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    await User.findByIdAndUpdate(id, { password: hashedPassword });
+    res.status(200).json({message: 'Успішний зміна паролю.'});
+  } catch (error) {
+    res.status(500).json({message: 'Помилка сервера.', error});
+  }
+
+};
