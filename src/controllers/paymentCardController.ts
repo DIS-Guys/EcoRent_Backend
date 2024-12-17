@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import PaymentCard, { IPaymentCard } from '../models/PaymentCard';
-import exp from "node:constants";
 
 export const addPaymentCard = async (req: Request, res: Response) => {
   const { cardNumber, expiryDate, ownerName } = req.body;
@@ -40,28 +39,24 @@ export const getPaymentCardsByOwnerId = async (req: Request, res: Response) => {
 };
 
 export const deletePaymentCard = async (req: Request, res: Response) => {
-
   const { id } = req.params;
   const ownerId = (req as any).user.id;
 
-  const paymentCard = await PaymentCard.findById(id);
-  if (paymentCard?.ownerId.toString() !== ownerId) {
-    return res.status(403).json({ message: 'Відмовлено у доступі'});
-  }
-
   try {
-    const deletedPaymentCard = await PaymentCard.findByIdAndDelete(id);
-
-    if (!deletedPaymentCard) {
+    const paymentCard = await PaymentCard.findById(id);
+    if (!paymentCard) {
       return res.status(404).json({ message: 'Платіжну картку не знайдено.' });
     }
 
-    res
-      .status(200)
-      .json({
-        message: 'Платіжну картку успішно видалено.',
-        deletedPaymentCard,
-      });
+    if (paymentCard.ownerId.toString() !== ownerId) {
+      return res.status(403).json({ message: 'Відмовлено у доступі' });
+    }
+
+    await PaymentCard.findByIdAndDelete(id);
+
+    res.status(200).json({
+      message: 'Платіжну картку успішно видалено.',
+    });
   } catch (error) {
     res.status(500).json({ message: 'Помилка сервера.', error });
   }

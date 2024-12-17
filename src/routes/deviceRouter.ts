@@ -37,6 +37,10 @@ router.get(
 );
 router.get('/getAllDevices', getAllDevices as express.RequestHandler);
 router.put('/updateDevice/:id', updateDevice as express.RequestHandler);
-router.delete('/deleteDevice/:id', deleteDevice as express.RequestHandler);
+router.delete(
+  '/deleteDevice/:id',
+  authenticateToken as express.RequestHandler,
+  deleteDevice as express.RequestHandler
+);
 
 export default router;

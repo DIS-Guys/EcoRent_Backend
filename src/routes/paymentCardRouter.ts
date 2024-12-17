@@ -9,9 +9,9 @@ import { authenticateToken } from '../middlewares/authMiddleware';
 const router = express.Router();
 
 router.post(
-    '/createPaymentCard', 
-    authenticateToken as express.RequestHandler,
-    addPaymentCard as express.RequestHandler
+  '/createPaymentCard',
+  authenticateToken as express.RequestHandler,
+  addPaymentCard as express.RequestHandler
 );
 router.get(
   '/getPaymentCardsByOwnerId',
@@ -20,9 +20,8 @@ router.get(
 );
 router.delete(
   '/deletePaymentCard/:id',
-    authenticateToken as express.RequestHandler,
-    deletePaymentCard as express.RequestHandler
-
+  authenticateToken as express.RequestHandler,
+  deletePaymentCard as express.RequestHandler
 );
 
 export default router;

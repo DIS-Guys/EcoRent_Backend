@@ -29,9 +29,9 @@ router.delete(
   deleteUser as express.RequestHandler
 );
 router.put(
-    '/updatePassword', authenticateToken as express.RequestHandler,
-    changePassword as express.RequestHandler
+  '/updatePassword',
+  authenticateToken as express.RequestHandler,
+  changePassword as express.RequestHandler
 );
-
 
 export default router;

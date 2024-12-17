@@ -129,9 +129,8 @@ export const changePassword = async (req: Request, res: Response) => {
 
     const hashedPassword = await bcrypt.hash(newPassword, 10);
     await User.findByIdAndUpdate(id, { password: hashedPassword });
-    res.status(200).json({message: 'Успішний зміна паролю.'});
+    res.status(200).json({ message: 'Успішний зміна паролю.' });
   } catch (error) {
-    res.status(500).json({message: 'Помилка сервера.', error});
+    res.status(500).json({ message: 'Помилка сервера.', error });
   }
-
 };

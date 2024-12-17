@@ -94,12 +94,16 @@ export const updateDevice = async (req: Request, res: Response) => {
 
 export const deleteDevice = async (req: Request, res: Response) => {
   const { id } = req.params;
+  const ownerId = (req as any).user.id;
 
   try {
     const device = await Device.findById(id);
-
     if (!device) {
-      throw new Error('Пристрій не знайдено.');
+      return res.status(404).json({ message: 'Пристрій не знайдено.' });
+    }
+
+    if (device.ownerId.toString() !== ownerId) {
+      return res.status(403).json({ message: 'Відмовлено у доступі' });
     }
 
     const images = device.images;
