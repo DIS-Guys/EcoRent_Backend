@@ -26,12 +26,6 @@ export const getPaymentCardsByOwnerId = async (req: Request, res: Response) => {
   try {
     const paymentCards = await PaymentCard.find({ ownerId });
 
-    if (paymentCards.length === 0) {
-      return res
-        .status(404)
-        .json({ message: 'Користувач не має платіжних карток.' });
-    }
-
     res.status(200).json(paymentCards);
   } catch (error) {
     res.status(500).json({ message: 'Помилка сервера.', error });

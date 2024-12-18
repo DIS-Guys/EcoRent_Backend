@@ -9,7 +9,7 @@ import { authenticateToken } from '../middlewares/authMiddleware';
 const router = express.Router();
 
 router.post(
-  '/createPaymentCard',
+  '/addPaymentCard',
   authenticateToken as express.RequestHandler,
   addPaymentCard as express.RequestHandler
 );
