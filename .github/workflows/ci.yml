@@ -34,7 +34,7 @@ jobs:
           NODE_ENV: test
       
       - name: Wait for server to be ready
-        run: sleep 10
+        run: sleep 30
 
       - name: Run unit tests
         run: npm test
