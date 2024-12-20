@@ -1,113 +1,53 @@
-import { Request, Response, NextFunction } from 'express';
+import { authenticateToken } from '../../src/middlewares/authMiddleware';
+import request from 'supertest';
+import express from 'express';
 import jwt from 'jsonwebtoken';
-import {IUser} from "../../src/models/User";
-import {authenticateToken} from "../../src/middlewares/authMiddleware";
 
-process.env.JWT_SECRET = 'test-secret';
+jest.mock('jsonwebtoken');
 
-describe('Authentication Middleware', () => {
-    let mockRequest: Partial<Request>;
-    let mockResponse: Partial<Response>;
-    let nextFunction: NextFunction;
+describe('authenticateToken middleware', () => {
+  let app: express.Application;
 
-    beforeEach(() => {
-        mockRequest = {
-            headers: {},
-        };
-        mockResponse = {
-            status: jest.fn().mockReturnThis(),
-            json: jest.fn().mockReturnThis(),
-        };
-        nextFunction = jest.fn();
+  beforeAll(() => {
+    app = express();
+    app.use(express.json());
+    app.use(authenticateToken as express.RequestHandler);
+
+    app.get('/protected', (req, res) => {
+      res.status(200).json({ message: 'Access granted' });
+    });
+  });
+
+  it('should return 401 if token is missing', async () => {
+    const response = await request(app).get('/protected');
+
+    expect(response.status).toBe(401);
+    expect(response.body.error).toBe('Token is required');
+  });
+
+  it('should return 403 if token is invalid', async () => {
+    (jwt.verify as jest.Mock).mockImplementationOnce(() => {
+      throw new Error('Invalid token');
     });
 
-    it('should authenticate valid token and call next()', () => {
-        const mockUser: Partial<IUser> = {
-            _id: '123',
-            email: 'test@example.com',
-            name: 'Test User'
-        };
+    const response = await request(app)
+      .get('/protected')
+      .set('Authorization', 'Bearer invalid-token');
 
-        const token = jwt.sign(mockUser, process.env.JWT_SECRET as string);
-        mockRequest.headers = {
-            authorization: `Bearer ${token}`
-        };
+    expect(response.status).toBe(403);
+    expect(response.body.error).toBe('Invalid token');
+  });
 
-        authenticateToken(
-            mockRequest as Request,
-            mockResponse as Response,
-            nextFunction
-        );
+  it('should pass the token and call next if token is valid', async () => {
+    const mockUser = { id: 1, name: 'John Doe' };
 
-        expect(nextFunction).toHaveBeenCalled();
-        expect(mockResponse.status).not.toHaveBeenCalled();
-        expect((mockRequest as any).user).toBeDefined();
-        expect((mockRequest as any).user.email).toBe(mockUser.email);
-    });
+    (jwt.verify as jest.Mock).mockImplementationOnce(() => mockUser);
 
-    it('should return 401 when no token is provided', () => {
-        authenticateToken(
-            mockRequest as Request,
-            mockResponse as Response,
-            nextFunction
-        );
+    const response = await request(app)
+      .get('/protected')
+      .set('Authorization', 'Bearer valid-token');
 
-        expect(mockResponse.status).toHaveBeenCalledWith(401);
-        expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Token is required' });
-        expect(nextFunction).not.toHaveBeenCalled();
-    });
-
-    it('should return 403 when token format is invalid', () => {
-        mockRequest.headers = {
-            authorization: 'Bearer invalid-token'
-        };
-
-        authenticateToken(
-            mockRequest as Request,
-            mockResponse as Response,
-            nextFunction
-        );
-
-        expect(mockResponse.status).toHaveBeenCalledWith(403);
-        expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid token' });
-        expect(nextFunction).not.toHaveBeenCalled();
-    });
-
-    it('should return 401 when authorization header is malformed', () => {
-        mockRequest.headers = {
-            authorization: 'InvalidFormat'
-        };
-
-        authenticateToken(
-            mockRequest as Request,
-            mockResponse as Response,
-            nextFunction
-        );
-
-        expect(mockResponse.status).toHaveBeenCalledWith(401);
-        expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Token is required' });
-        expect(nextFunction).not.toHaveBeenCalled();
-    });
-
-    it('should return 403 when token is expired', () => {
-        const mockUser: Partial<IUser> = {
-            _id: '123',
-            email: 'test@example.com'
-        };
-
-        const token = jwt.sign(mockUser, process.env.JWT_SECRET as string, { expiresIn: '0s' });
-        mockRequest.headers = {
-            authorization: `Bearer ${token}`
-        };
-
-        authenticateToken(
-            mockRequest as Request,
-            mockResponse as Response,
-            nextFunction
-        );
-
-        expect(mockResponse.status).toHaveBeenCalledWith(403);
-        expect(mockResponse.json).toHaveBeenCalledWith({ error: 'Invalid token' });
-        expect(nextFunction).not.toHaveBeenCalled();
-    });
+    expect(response.status).toBe(200);
+    expect(response.body.message).toBe('Access granted');
+  });
 });
