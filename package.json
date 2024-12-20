@@ -7,7 +7,7 @@
     "start": "node dist/index.js",
     "dev": "nodemon src/index.ts",
     "test": "jest",
-    "test:api": "newman run postman_collection.json -e postman_environment.json"
+    "test:api": "newman run tests/postman/postman_collection.json -e tests/postman/postman_environment.json"
   },
   "keywords": [],
   "author": "",
