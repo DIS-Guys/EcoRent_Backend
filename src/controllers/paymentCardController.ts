@@ -6,15 +6,15 @@ export const addPaymentCard = async (req: Request, res: Response) => {
   const ownerId = (req as any).user.id;
 
   try {
-    const newPaymentCard: IPaymentCard = new PaymentCard({
+    const paymentCard: IPaymentCard = new PaymentCard({
       cardNumber,
       expiryDate,
       ownerName,
       ownerId,
     });
-    await newPaymentCard.save();
+    await paymentCard.save();
 
-    res.status(201).json({ message: 'Платіжна картка додана.' });
+    res.status(201).json({ message: 'Платіжна картка додана.', paymentCard });
   } catch (error) {
     res.status(500).json({ message: 'Помилка сервера.', error });
   }

@@ -36,7 +36,11 @@ router.get(
   getDevicesByOwnerId as express.RequestHandler
 );
 router.get('/getAllDevices', getAllDevices as express.RequestHandler);
-router.put('/updateDevice/:id', updateDevice as express.RequestHandler);
+router.put(
+  '/updateDevice/:id',
+  authenticateToken as express.RequestHandler,
+  updateDevice as express.RequestHandler
+);
 router.delete(
   '/deleteDevice/:id',
   authenticateToken as express.RequestHandler,
