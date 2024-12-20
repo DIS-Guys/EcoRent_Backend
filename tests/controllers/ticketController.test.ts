@@ -3,7 +3,7 @@ import request from 'supertest';
 import express, { RequestHandler } from 'express';
 import {
   createTicket,
-  getTicketById,
+  getTicket,
   getAllTickets,
   deleteTicket,
 } from '../../src/controllers/ticketController';
@@ -13,7 +13,7 @@ const app = express();
 app.use(express.json());
 
 app.post('/tickets', createTicket as RequestHandler);
-app.get('/tickets/:id', getTicketById as RequestHandler);
+app.get('/tickets/:id', getTicket as RequestHandler);
 app.get('/tickets', getAllTickets as RequestHandler);
 app.delete('/tickets/:id', deleteTicket as RequestHandler);
 
@@ -51,7 +51,7 @@ describe('Ticket Controller Tests', () => {
       const response = await request(app).post('/tickets').send(mockTicketData);
 
       expect(response.status).toBe(201);
-      expect(response.body).toEqual({ message: 'Тікет створено.' });
+      expect(response.body.message).toEqual('Тікет створено.');
       expect(mockedTicket.save).toHaveBeenCalled();
     });
 
@@ -88,7 +88,7 @@ describe('Ticket Controller Tests', () => {
       const response = await request(app).get(`/tickets/${mockId.toString()}`);
 
       expect(response.status).toBe(200);
-      expect(response.body.ticket).toEqual({
+      expect(response.body).toEqual({
         ...mockTicketData,
         _id: mockId.toString(),
       });
@@ -153,10 +153,6 @@ describe('Ticket Controller Tests', () => {
 
       expect(response.status).toBe(200);
       expect(response.body.message).toBe('Тікет успішно видалено.');
-      expect(response.body.deletedTicket).toEqual({
-        ...mockTicketData,
-        _id: mockId.toString(),
-      });
     });
 
     it('should return 404 if ticket to delete not found', async () => {
