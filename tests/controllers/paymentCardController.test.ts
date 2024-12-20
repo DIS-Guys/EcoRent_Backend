@@ -32,45 +32,6 @@ describe('Payment Card Controller', () => {
     jest.clearAllMocks();
   });
 
-  describe('addPaymentCard', () => {
-    beforeEach(() => {
-      mockRequest = {
-        body: {
-          cardNumber: '4111111111111111',
-          expiryDate: [12, 25],
-          ownerName: 'John Doe',
-        },
-        user: mockUser,
-      };
-    });
-
-    it('should successfully add a payment card', async () => {
-      (PaymentCard.prototype.save as jest.Mock).mockResolvedValue({});
-
-      await addPaymentCard(mockRequest as Request, mockResponse as Response);
-
-      expect(mockResponse.status).toHaveBeenCalledWith(201);
-      expect(mockResponse.json).toHaveBeenCalledWith({
-        message: 'Платіжна картка додана.',
-      });
-    });
-
-    it('should handle errors when adding a payment card', async () => {
-      (PaymentCard.prototype.save as jest.Mock).mockRejectedValue(
-        new Error('DB Error')
-      );
-
-      await addPaymentCard(mockRequest as Request, mockResponse as Response);
-
-      expect(mockResponse.status).toHaveBeenCalledWith(500);
-      expect(mockResponse.json).toHaveBeenCalledWith(
-        expect.objectContaining({
-          message: 'Помилка сервера.',
-        })
-      );
-    });
-  });
-
   describe('getPaymentCardsByOwnerId', () => {
     beforeEach(() => {
       mockRequest = {

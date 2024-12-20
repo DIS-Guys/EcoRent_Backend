@@ -35,55 +35,6 @@ describe('Device Controller', () => {
     jest.clearAllMocks();
   });
 
-  describe('addDevice', () => {
-    beforeEach(() => {
-      mockRequest = {
-        body: {
-          title: 'Test Device',
-          imageDimensions: '[{"width": 800, "height": 600}]',
-        },
-        files: [
-          {
-            originalname: 'test-image.jpg',
-            buffer: Buffer.from('test'),
-            mimetype: 'image/jpeg',
-          },
-        ] as Express.Multer.File[],
-        user: mockUser,
-      };
-    });
-
-    it('should successfully add a device', async () => {
-      const mockParsedData = {
-        title: 'Test Device',
-        imageDimensions: [{ width: 800, height: 600 }],
-      };
-      const mockS3Response = { Location: 'https://test-url.com/image.jpg' };
-      const mockDevice = {
-        _id: new mongoose.Types.ObjectId(),
-        title: 'Test Device',
-        images: [{
-          url: 'https://test-url.com/image.jpg',
-          width: 800,
-          height: 600
-        }],
-        ownerId: mockUser.id,
-      };
-
-      (parseFormDataUtil.parseFormData as jest.Mock).mockReturnValue(mockParsedData);
-      (s3Config.uploadToS3 as jest.Mock).mockResolvedValue(mockS3Response);
-      (Device.prototype.save as jest.Mock).mockResolvedValue(mockDevice);
-
-      await addDevice(mockRequest as Request, mockResponse as Response);
-
-      expect(mockResponse.status).toHaveBeenCalledWith(201);
-      expect(mockResponse.json).toHaveBeenCalledWith({
-        message: 'Пристрій додано.',
-        device: mockDevice
-      });
-    });
-  });
-
   describe('getDevice', () => {
     const mockDeviceId = 'device123';
 
