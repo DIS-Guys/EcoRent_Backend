@@ -28,6 +28,14 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Start development server
+        run: npm run dev &
+        env:
+          NODE_ENV: test
+      
+      - name: Wait for server to be ready
+        run: sleep 10
+
       - name: Run unit tests
         run: npm test
 
