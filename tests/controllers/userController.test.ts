@@ -21,16 +21,21 @@ describe('User Controller', () => {
   let mockRequest: Partial<Request>;
   let mockResponse: Response;
   let jsonFunction: jest.Mock;
+  let sendFunction: jest.Mock;
 
   beforeEach(() => {
     jsonFunction = jest.fn();
-    const statusFunction = jest.fn().mockReturnValue({ json: jsonFunction });
+    sendFunction = jest.fn();
+    const statusFunction = jest.fn().mockReturnValue({
+      json: jsonFunction,
+      send: sendFunction,
+    });
 
     mockResponse = {
       status: statusFunction,
       json: jsonFunction,
+      send: sendFunction,
       sendStatus: jest.fn(),
-      send: jest.fn(),
       end: jest.fn(),
     } as unknown as Response;
 
@@ -73,6 +78,18 @@ describe('User Controller', () => {
         message: 'Користувач із таким email вже існує.',
       });
     });
+
+    it('should return 500 if server error occurs', async () => {
+      (User.findOne as jest.Mock).mockRejectedValue(new Error('Database error'));
+
+      await createUser(mockRequest as Request, mockResponse);
+
+      expect(mockResponse.status).toHaveBeenCalledWith(500);
+      expect(jsonFunction).toHaveBeenCalledWith({
+        message: 'Помилка сервера.',
+        error: expect.any(Error),
+      });
+    });
   });
 
   describe('getUser', () => {
@@ -104,6 +121,18 @@ describe('User Controller', () => {
       expect(mockResponse.status).toHaveBeenCalledWith(404);
       expect(jsonFunction).toHaveBeenCalledWith({
         message: 'Користувача не знайдено.',
+      });
+    });
+
+    it('should return 500 if server error occurs', async () => {
+      (User.findById as jest.Mock).mockRejectedValue(new Error('Database error'));
+
+      await getUser(mockRequest as Request, mockResponse);
+
+      expect(mockResponse.status).toHaveBeenCalledWith(500);
+      expect(jsonFunction).toHaveBeenCalledWith({
+        message: 'Помилка сервера.',
+        error: expect.any(Error),
       });
     });
   });
@@ -139,6 +168,18 @@ describe('User Controller', () => {
         message: 'Користувача не знайдено.',
       });
     });
+
+    it('should return 500 if server error occurs', async () => {
+      (User.findByIdAndUpdate as jest.Mock).mockRejectedValue(new Error('Database error'));
+
+      await updateUser(mockRequest as Request, mockResponse);
+
+      expect(mockResponse.status).toHaveBeenCalledWith(500);
+      expect(jsonFunction).toHaveBeenCalledWith({
+        message: 'Помилка сервера.',
+        error: expect.any(Error),
+      });
+    });
   });
 
   describe('deleteUser', () => {
@@ -156,11 +197,8 @@ describe('User Controller', () => {
       await deleteUser(mockRequest as Request, mockResponse);
 
       expect(Device.deleteMany).toHaveBeenCalledWith({ ownerId: 'testUserId' });
-      expect(mockResponse.status).toHaveBeenCalledWith(200);
-      expect(jsonFunction).toHaveBeenCalledWith({
-        message: 'Користувача успішно видалено.',
-        deletedUser,
-      });
+      expect(mockResponse.status).toHaveBeenCalledWith(204);
+      expect(sendFunction).toHaveBeenCalled();
     });
 
     it('should return 404 if user not found', async () => {
@@ -171,6 +209,18 @@ describe('User Controller', () => {
       expect(mockResponse.status).toHaveBeenCalledWith(404);
       expect(jsonFunction).toHaveBeenCalledWith({
         message: 'Користувача не знайдено.',
+      });
+    });
+
+    it('should return 500 if server error occurs', async () => {
+      (User.findByIdAndDelete as jest.Mock).mockRejectedValue(new Error('Database error'));
+
+      await deleteUser(mockRequest as Request, mockResponse);
+
+      expect(mockResponse.status).toHaveBeenCalledWith(500);
+      expect(jsonFunction).toHaveBeenCalledWith({
+        message: 'Помилка сервера.',
+        error: expect.any(Error),
       });
     });
   });
@@ -233,6 +283,18 @@ describe('User Controller', () => {
         message: 'Невірний пароль.',
       });
     });
+
+    it('should return 500 if server error occurs', async () => {
+      (User.findOne as jest.Mock).mockRejectedValue(new Error('Database error'));
+
+      await authenticateUser(mockRequest as Request, mockResponse);
+
+      expect(mockResponse.status).toHaveBeenCalledWith(500);
+      expect(jsonFunction).toHaveBeenCalledWith({
+        message: 'Помилка сервера.',
+        error: expect.any(Error),
+      });
+    });
   });
 
   describe('changePassword', () => {
@@ -262,7 +324,7 @@ describe('User Controller', () => {
 
       expect(mockResponse.status).toHaveBeenCalledWith(200);
       expect(jsonFunction).toHaveBeenCalledWith({
-        message: 'Успішний зміна паролю.',
+        message: 'Успішна зміна паролю.',
       });
     });
 
@@ -291,6 +353,18 @@ describe('User Controller', () => {
       expect(mockResponse.status).toHaveBeenCalledWith(400);
       expect(jsonFunction).toHaveBeenCalledWith({
         message: 'Старий пароль невірний.',
+      });
+    });
+
+    it('should return 500 if server error occurs', async () => {
+      (User.findById as jest.Mock).mockRejectedValue(new Error('Database error'));
+
+      await changePassword(mockRequest as Request, mockResponse);
+
+      expect(mockResponse.status).toHaveBeenCalledWith(500);
+      expect(jsonFunction).toHaveBeenCalledWith({
+        message: 'Помилка сервера.',
+        error: expect.any(Error),
       });
     });
   });

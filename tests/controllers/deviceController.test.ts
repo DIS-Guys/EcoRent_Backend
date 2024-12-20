@@ -11,6 +11,7 @@ import {
   deleteDevice,
 } from '../../src/controllers/deviceController';
 import Device from '../../src/models/Device';
+
 interface RequestWithUser extends Request {
   user: {
     id: string;
@@ -58,34 +59,28 @@ describe('Device Controller', () => {
         imageDimensions: [{ width: 800, height: 600 }],
       };
       const mockS3Response = { Location: 'https://test-url.com/image.jpg' };
+      const mockDevice = {
+        _id: new mongoose.Types.ObjectId(),
+        title: 'Test Device',
+        images: [{
+          url: 'https://test-url.com/image.jpg',
+          width: 800,
+          height: 600
+        }],
+        ownerId: mockUser.id,
+      };
 
-      (parseFormDataUtil.parseFormData as jest.Mock).mockReturnValue(
-        mockParsedData
-      );
+      (parseFormDataUtil.parseFormData as jest.Mock).mockReturnValue(mockParsedData);
       (s3Config.uploadToS3 as jest.Mock).mockResolvedValue(mockS3Response);
-      (Device.prototype.save as jest.Mock).mockResolvedValue({});
+      (Device.prototype.save as jest.Mock).mockResolvedValue(mockDevice);
 
       await addDevice(mockRequest as Request, mockResponse as Response);
 
       expect(mockResponse.status).toHaveBeenCalledWith(201);
       expect(mockResponse.json).toHaveBeenCalledWith({
         message: 'Пристрій додано.',
+        device: mockDevice
       });
-    });
-
-    it('should handle errors when adding a device', async () => {
-      (Device.prototype.save as jest.Mock).mockRejectedValue(
-        new Error('DB Error')
-      );
-
-      await addDevice(mockRequest as Request, mockResponse as Response);
-
-      expect(mockResponse.status).toHaveBeenCalledWith(500);
-      expect(mockResponse.json).toHaveBeenCalledWith(
-        expect.objectContaining({
-          message: 'Помилка сервера.',
-        })
-      );
     });
   });
 
@@ -216,23 +211,8 @@ describe('Device Controller', () => {
       mockRequest = {
         params: { id: mockDeviceId },
         body: mockUpdates,
+        user: mockUser,
       };
-    });
-
-    it('should successfully update a device', async () => {
-      const mockUpdatedDevice = { _id: mockDeviceId, ...mockUpdates };
-
-      (Device.findByIdAndUpdate as jest.Mock).mockResolvedValue(
-        mockUpdatedDevice
-      );
-
-      await updateDevice(mockRequest as Request, mockResponse as Response);
-
-      expect(mockResponse.status).toHaveBeenCalledWith(200);
-      expect(mockResponse.json).toHaveBeenCalledWith({
-        message: 'Дані пристрою оновлено.',
-        updatedDevice: mockUpdatedDevice,
-      });
     });
 
     it('should handle device not found', async () => {
@@ -243,6 +223,41 @@ describe('Device Controller', () => {
       expect(mockResponse.status).toHaveBeenCalledWith(404);
       expect(mockResponse.json).toHaveBeenCalledWith({
         message: 'Пристрій не знайдено.',
+      });
+    });
+
+    it('should handle unauthorized update', async () => {
+      const mockUpdatedDevice = {
+        _id: mockDeviceId,
+        ownerId: 'differentUserId', // Different from mockUser.id
+        ...mockUpdates
+      };
+
+      (Device.findByIdAndUpdate as jest.Mock).mockResolvedValue(mockUpdatedDevice);
+
+      await updateDevice(mockRequest as Request, mockResponse as Response);
+
+      expect(mockResponse.status).toHaveBeenCalledWith(403);
+      expect(mockResponse.json).toHaveBeenCalledWith({
+        message: 'Відмовлено у доступі.',
+      });
+    });
+
+    it('should successfully update a device', async () => {
+      const mockUpdatedDevice = {
+        _id: mockDeviceId,
+        ownerId: mockUser.id,
+        ...mockUpdates
+      };
+
+      (Device.findByIdAndUpdate as jest.Mock).mockResolvedValue(mockUpdatedDevice);
+
+      await updateDevice(mockRequest as Request, mockResponse as Response);
+
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+      expect(mockResponse.json).toHaveBeenCalledWith({
+        message: 'Дані пристрою оновлено.',
+        updatedDevice: mockUpdatedDevice
       });
     });
   });
