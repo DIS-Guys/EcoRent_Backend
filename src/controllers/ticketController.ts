@@ -5,16 +5,16 @@ export const createTicket = async (req: Request, res: Response) => {
   const { userEmail, message } = req.body;
 
   try {
-    const newTicket: ITicket = new Ticket({ userEmail, message });
-    await newTicket.save();
+    const ticket: ITicket = new Ticket({ userEmail, message });
+    await ticket.save();
 
-    res.status(201).json({ message: 'Тікет створено.' });
+    res.status(201).json({ message: 'Тікет створено.', ticket });
   } catch (error) {
     res.status(500).json({ message: 'Помилка сервера.', error });
   }
 };
 
-export const getTicketById = async (req: Request, res: Response) => {
+export const getTicket = async (req: Request, res: Response) => {
   const { id } = req.params;
 
   try {
@@ -24,7 +24,7 @@ export const getTicketById = async (req: Request, res: Response) => {
       return res.status(404).json({ message: 'Тікет не знайдено.' });
     }
 
-    res.status(200).json({ ticket });
+    res.status(200).json(ticket);
   } catch (error) {
     res.status(500).json({ message: 'Помилка сервера.', error });
   }
@@ -50,7 +50,7 @@ export const deleteTicket = async (req: Request, res: Response) => {
       return res.status(404).json({ message: 'Тікет не знайдено.' });
     }
 
-    res.status(200).json({ message: 'Тікет успішно видалено.', deletedTicket });
+    res.status(200).json({ message: 'Тікет успішно видалено.' });
   } catch (error) {
     res.status(500).json({ message: 'Помилка сервера.', error });
   }

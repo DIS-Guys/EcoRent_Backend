@@ -30,7 +30,7 @@ export const addDevice = async (req: Request, res: Response) => {
     });
     await device.save();
 
-    res.status(201).json({ message: 'Пристрій додано.' });
+    res.status(201).json({ message: 'Пристрій додано.', device });
   } catch (error) {
     res.status(500).json({ message: 'Помилка сервера.', error });
   }
@@ -74,6 +74,7 @@ export const getAllDevices = async (req: Request, res: Response) => {
 };
 
 export const updateDevice = async (req: Request, res: Response) => {
+  const ownerId = (req as any).user.id;
   const { id } = req.params;
   const updates = req.body;
 
@@ -84,6 +85,10 @@ export const updateDevice = async (req: Request, res: Response) => {
 
     if (!updatedDevice) {
       return res.status(404).json({ message: 'Пристрій не знайдено.' });
+    }
+
+    if (updatedDevice.ownerId.toString() !== ownerId) {
+      return res.status(403).json({ message: 'Відмовлено у доступі.' });
     }
 
     res.status(200).json({ message: 'Дані пристрою оновлено.', updatedDevice });
@@ -103,7 +108,7 @@ export const deleteDevice = async (req: Request, res: Response) => {
     }
 
     if (device.ownerId.toString() !== ownerId) {
-      return res.status(403).json({ message: 'Відмовлено у доступі' });
+      return res.status(403).json({ message: 'Відмовлено у доступі.' });
     }
 
     const images = device.images;

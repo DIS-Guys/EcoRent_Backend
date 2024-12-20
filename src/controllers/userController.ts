@@ -78,9 +78,7 @@ export const deleteUser = async (req: Request, res: Response) => {
       return res.status(404).json({ message: 'Користувача не знайдено.' });
     }
 
-    res
-      .status(200)
-      .json({ message: 'Користувача успішно видалено.', deletedUser });
+    res.status(204).send();
   } catch (error) {
     res.status(500).json({ message: 'Помилка сервера.', error });
   }
@@ -129,7 +127,7 @@ export const changePassword = async (req: Request, res: Response) => {
 
     const hashedPassword = await bcrypt.hash(newPassword, 10);
     await User.findByIdAndUpdate(id, { password: hashedPassword });
-    res.status(200).json({ message: 'Успішний зміна паролю.' });
+    res.status(200).json({ message: 'Успішна зміна паролю.' });
   } catch (error) {
     res.status(500).json({ message: 'Помилка сервера.', error });
   }
