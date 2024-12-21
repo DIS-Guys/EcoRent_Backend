@@ -78,7 +78,7 @@ export const deleteUser = async (req: Request, res: Response) => {
       return res.status(404).json({ message: 'Користувача не знайдено.' });
     }
 
-    res.status(204).send();
+    res.status(200).json({ message: 'Користувача видалено успішно.' });
   } catch (error) {
     res.status(500).json({ message: 'Помилка сервера.', error });
   }

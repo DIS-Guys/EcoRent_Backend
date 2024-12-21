@@ -368,16 +368,16 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Status code is 204\", function () {\r",
-									"    pm.response.to.have.status(204);\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
 									"});\r",
 									"\r",
 									"pm.test(\"Response time is less than 500ms\", function () {\r",
 									"    pm.expect(pm.response.responseTime).to.be.below(500);\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Response body should be empty\", function () {\r",
-									"    pm.expect(pm.response.text()).to.be.empty;\r",
+									"pm.test(\"Response body should not be empty\", function () {\r",
+									"    pm.expect(pm.response.text()).not.to.be.empty;\r",
 									"});\r",
 									""
 								],
