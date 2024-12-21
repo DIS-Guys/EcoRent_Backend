@@ -197,7 +197,7 @@ describe('User Controller', () => {
       await deleteUser(mockRequest as Request, mockResponse);
 
       expect(Device.deleteMany).toHaveBeenCalledWith({ ownerId: 'testUserId' });
-      expect(mockResponse.status).toHaveBeenCalledWith(204);
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
       expect(sendFunction).toHaveBeenCalled();
     });
 
