@@ -80,7 +80,9 @@ describe('User Controller', () => {
     });
 
     it('should return 500 if server error occurs', async () => {
-      (User.findOne as jest.Mock).mockRejectedValue(new Error('Database error'));
+      (User.findOne as jest.Mock).mockRejectedValue(
+        new Error('Database error')
+      );
 
       await createUser(mockRequest as Request, mockResponse);
 
@@ -125,7 +127,9 @@ describe('User Controller', () => {
     });
 
     it('should return 500 if server error occurs', async () => {
-      (User.findById as jest.Mock).mockRejectedValue(new Error('Database error'));
+      (User.findById as jest.Mock).mockRejectedValue(
+        new Error('Database error')
+      );
 
       await getUser(mockRequest as Request, mockResponse);
 
@@ -170,7 +174,9 @@ describe('User Controller', () => {
     });
 
     it('should return 500 if server error occurs', async () => {
-      (User.findByIdAndUpdate as jest.Mock).mockRejectedValue(new Error('Database error'));
+      (User.findByIdAndUpdate as jest.Mock).mockRejectedValue(
+        new Error('Database error')
+      );
 
       await updateUser(mockRequest as Request, mockResponse);
 
@@ -198,7 +204,9 @@ describe('User Controller', () => {
 
       expect(Device.deleteMany).toHaveBeenCalledWith({ ownerId: 'testUserId' });
       expect(mockResponse.status).toHaveBeenCalledWith(200);
-      expect(sendFunction).toHaveBeenCalled();
+      expect(jsonFunction).toHaveBeenCalledWith({
+        message: 'Користувача видалено успішно.',
+      });
     });
 
     it('should return 404 if user not found', async () => {
@@ -213,7 +221,9 @@ describe('User Controller', () => {
     });
 
     it('should return 500 if server error occurs', async () => {
-      (User.findByIdAndDelete as jest.Mock).mockRejectedValue(new Error('Database error'));
+      (User.findByIdAndDelete as jest.Mock).mockRejectedValue(
+        new Error('Database error')
+      );
 
       await deleteUser(mockRequest as Request, mockResponse);
 
@@ -285,7 +295,9 @@ describe('User Controller', () => {
     });
 
     it('should return 500 if server error occurs', async () => {
-      (User.findOne as jest.Mock).mockRejectedValue(new Error('Database error'));
+      (User.findOne as jest.Mock).mockRejectedValue(
+        new Error('Database error')
+      );
 
       await authenticateUser(mockRequest as Request, mockResponse);
 
@@ -357,7 +369,9 @@ describe('User Controller', () => {
     });
 
     it('should return 500 if server error occurs', async () => {
-      (User.findById as jest.Mock).mockRejectedValue(new Error('Database error'));
+      (User.findById as jest.Mock).mockRejectedValue(
+        new Error('Database error')
+      );
 
       await changePassword(mockRequest as Request, mockResponse);
 
