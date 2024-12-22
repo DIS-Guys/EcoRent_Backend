@@ -20,11 +20,14 @@ Our project is an innovative charging station rental site called EcoFlow, which 
 1. [Download node.js (version 22.11.0)](https://nodejs.org/en/blog/release/v22.11.0)
 2. Run ```npm install``` in project`s root directory
 3. Run ```npm run dev``` to launch front-end part
-4. Visit http://localhost:5173/ to see the site ;)
+5. Visit http://localhost:5173/ to see the site ;)
+4. Use ```px playwright test  --reporter=html``` to run e2e tests (you need to have backend running)
 
 #### Back-end (TypeScript + Express)
 
 1. [Download node.js (version 22.11.0)](https://nodejs.org/en/blog/release/v22.11.0)
 2. Run ```npm install``` in project`s root directory
-3. Run ```npm run dev``` to launch front-end part
+3. Run ```npm run dev``` to launch back-end part
 4. Now back-end is running ;)
+5. Use ```npm test``` to run unit tests
+6. Use ```npm run test:api``` to run integration tests with newman
