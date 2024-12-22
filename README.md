@@ -21,7 +21,7 @@ Our project is an innovative charging station rental site called EcoFlow, which 
 2. Run ```npm install``` in project`s root directory
 3. Run ```npm run dev``` to launch front-end part
 5. Visit http://localhost:5173/ to see the site ;)
-4. Use ```px playwright test  --reporter=html``` to run e2e tests (you need to have backend running)
+4. Use ```npx playwright test  --reporter=html``` to run e2e tests (you need to have backend running)
 
 #### Back-end (TypeScript + Express)
 
