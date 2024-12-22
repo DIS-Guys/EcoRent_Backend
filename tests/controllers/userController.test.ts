@@ -11,11 +11,19 @@ import {
 } from '../../src/controllers/userController';
 import User from '../../src/models/User';
 import Device from '../../src/models/Device';
+import PaymentCard from '../../src/models/PaymentCard';
 
 jest.mock('../../src/models/User');
 jest.mock('../../src/models/Device');
 jest.mock('bcrypt');
 jest.mock('jsonwebtoken');
+jest.mock('../../src/models/PaymentCard', () => ({
+  deleteMany: jest.fn(),
+  __esModule: true,
+  default: {
+    deleteMany: jest.fn(),
+  },
+}));
 
 describe('User Controller', () => {
   let mockRequest: Partial<Request>;
@@ -199,10 +207,14 @@ describe('User Controller', () => {
       const deletedUser = { _id: 'testUserId', name: 'Test' };
       (User.findByIdAndDelete as jest.Mock).mockResolvedValue(deletedUser);
       (Device.deleteMany as jest.Mock).mockResolvedValue({});
+      (PaymentCard.deleteMany as jest.Mock).mockResolvedValue({});
 
       await deleteUser(mockRequest as Request, mockResponse);
 
       expect(Device.deleteMany).toHaveBeenCalledWith({ ownerId: 'testUserId' });
+      expect(PaymentCard.deleteMany).toHaveBeenCalledWith({
+        ownerId: 'testUserId',
+      });
       expect(mockResponse.status).toHaveBeenCalledWith(200);
       expect(jsonFunction).toHaveBeenCalledWith({
         message: 'Користувача видалено успішно.',
