@@ -12,6 +12,15 @@ interface RequestWithUser extends Request {
   };
 }
 
+type MockPaymentCard = {
+  _id: string;
+  cardNumber: string;
+  expiryDate: [number, number];
+  ownerName: string;
+  ownerId: string;
+  save: jest.Mock;
+};
+
 jest.mock('../../src/models/PaymentCard');
 
 describe('Payment Card Controller', () => {
@@ -30,6 +39,41 @@ describe('Payment Card Controller', () => {
       json: jest.fn(),
     };
     jest.clearAllMocks();
+  });
+
+  describe('addPaymentCard', () => {
+    beforeEach(() => {
+      mockRequest = {
+        body: {
+          cardNumber: '4111111111111111',
+          expiryDate: [12, 25],
+          ownerName: 'John Doe',
+        },
+        user: mockUser,
+      };
+    });
+
+    it('should handle errors when adding a payment card', async () => {
+      const dbError = new Error('DB Error');
+
+      (PaymentCard as jest.MockedClass<typeof PaymentCard>).mockReset();
+
+      (PaymentCard as unknown as jest.Mock).mockImplementation(function(this: any, data: any) {
+        Object.assign(this, {
+          ...data,
+          save: jest.fn().mockRejectedValueOnce(dbError)
+        });
+        return this;
+      });
+
+      await addPaymentCard(mockRequest as Request, mockResponse as Response);
+
+      expect(mockResponse.status).toHaveBeenCalledWith(500);
+      expect(mockResponse.json).toHaveBeenCalledWith({
+        message: 'Помилка сервера.',
+        error: dbError
+      });
+    });
   });
 
   describe('getPaymentCardsByOwnerId', () => {
@@ -52,8 +96,8 @@ describe('Payment Card Controller', () => {
       (PaymentCard.find as jest.Mock).mockResolvedValue(mockCards);
 
       await getPaymentCardsByOwnerId(
-        mockRequest as RequestWithUser,
-        mockResponse as Response
+          mockRequest as RequestWithUser,
+          mockResponse as Response
       );
 
       expect(mockResponse.status).toHaveBeenCalledWith(200);
@@ -61,19 +105,19 @@ describe('Payment Card Controller', () => {
     });
 
     it('should handle errors when getting payment cards', async () => {
-      (PaymentCard.find as jest.Mock).mockRejectedValue(new Error('DB Error'));
+      const dbError = new Error('DB Error');
+      (PaymentCard.find as jest.Mock).mockRejectedValue(dbError);
 
       await getPaymentCardsByOwnerId(
-        mockRequest as RequestWithUser,
-        mockResponse as Response
+          mockRequest as RequestWithUser,
+          mockResponse as Response
       );
 
       expect(mockResponse.status).toHaveBeenCalledWith(500);
-      expect(mockResponse.json).toHaveBeenCalledWith(
-        expect.objectContaining({
-          message: 'Помилка сервера.',
-        })
-      );
+      expect(mockResponse.json).toHaveBeenCalledWith({
+        message: 'Помилка сервера.',
+        error: dbError
+      });
     });
   });
 
@@ -134,18 +178,16 @@ describe('Payment Card Controller', () => {
     });
 
     it('should handle errors during deletion', async () => {
-      (PaymentCard.findById as jest.Mock).mockRejectedValue(
-        new Error('DB Error')
-      );
+      const dbError = new Error('DB Error');
+      (PaymentCard.findById as jest.Mock).mockRejectedValue(dbError);
 
       await deletePaymentCard(mockRequest as Request, mockResponse as Response);
 
       expect(mockResponse.status).toHaveBeenCalledWith(500);
-      expect(mockResponse.json).toHaveBeenCalledWith(
-        expect.objectContaining({
-          message: 'Помилка сервера.',
-        })
-      );
+      expect(mockResponse.json).toHaveBeenCalledWith({
+        message: 'Помилка сервера.',
+        error: dbError
+      });
     });
   });
 });

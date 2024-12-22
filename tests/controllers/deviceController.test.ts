@@ -35,6 +35,97 @@ describe('Device Controller', () => {
     jest.clearAllMocks();
   });
 
+  describe('addDevice', () => {
+    let mockRequest: Partial<RequestWithUser>;
+    let mockResponse: Partial<Response>;
+    const mockUser = { id: 'userId123' };
+
+    beforeEach(() => {
+      mockRequest = {
+        body: {
+          title: 'Test Device',
+          imageDimensions: '[{"width": 800, "height": 600}]',
+        },
+        files: [
+          {
+            originalname: 'test-image.jpg',
+            buffer: Buffer.from('test'),
+            mimetype: 'image/jpeg',
+          },
+        ] as Express.Multer.File[],
+        user: mockUser,
+      };
+
+      mockResponse = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn(),
+      };
+
+      jest.clearAllMocks();
+    });
+
+    it('should successfully add a device', async () => {
+      const mockParsedData = {
+        title: 'Test Device',
+        imageDimensions: [{ width: 800, height: 600 }],
+      };
+
+      const mockS3Response = { Location: 'https://test-url.com/image.jpg' };
+
+      const mockDevice = {
+        _id: '6765b6488cbb5aa421d7ccf2',
+        title: 'Test Device',
+        images: [{
+          url: 'https://test-url.com/image.jpg',
+          width: 800,
+          height: 600
+        }],
+        ownerId: 'userId123',
+        save: jest.fn().mockResolvedValue({
+          _id: '6765b6488cbb5aa421d7ccf2',
+          title: 'Test Device',
+          images: [{
+            url: 'https://test-url.com/image.jpg',
+            width: 800,
+            height: 600
+          }],
+          ownerId: 'userId123'
+        }),
+        toObject: jest.fn().mockReturnValue({
+          _id: '6765b6488cbb5aa421d7ccf2',
+          title: 'Test Device',
+          images: [{
+            url: 'https://test-url.com/image.jpg',
+            width: 800,
+            height: 600
+          }],
+          ownerId: 'userId123'
+        })
+      };
+
+      (parseFormDataUtil.parseFormData as jest.Mock).mockReturnValue(mockParsedData);
+      (s3Config.uploadToS3 as jest.Mock).mockResolvedValue(mockS3Response);
+      (Device as unknown as jest.Mock).mockImplementation(() => mockDevice);
+
+      await addDevice(mockRequest as Request, mockResponse as Response);
+
+      expect(mockResponse.status).toHaveBeenCalledWith(201);
+      expect(mockResponse.json).toHaveBeenCalledWith({
+        message: 'Пристрій додано.',
+        device: expect.objectContaining({
+          _id: '6765b6488cbb5aa421d7ccf2',
+          title: 'Test Device',
+          images: [{
+            url: 'https://test-url.com/image.jpg',
+            width: 800,
+            height: 600
+          }],
+          ownerId: 'userId123'
+        })
+      });
+    });
+  });
+
   describe('getDevice', () => {
     const mockDeviceId = 'device123';
 
