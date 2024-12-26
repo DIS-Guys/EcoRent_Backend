@@ -8,9 +8,9 @@
     "dev": "nodemon src/index.ts",
     "test": "jest",
     "test:api": "newman run tests/postman/postman_collection.json -e tests/postman/postman_environment.json",
-    "lint": "eslint './**/*.{js,ts}'",
-    "lint:fix": "eslint './**/*.{js,ts}' --fix",
-    "format": "prettier --write '/**/*.{js,ts}'"
+    "lint": "eslint \"{src,tests}/**/*.ts\"",
+    "lint:fix": "eslint \"{src,tests}/**/*.ts\" --fix",
+    "format": "prettier --write \"{src,tests}/**/*.ts\""
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
