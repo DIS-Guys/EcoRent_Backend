@@ -12,6 +12,7 @@ import {
 import User from '../../src/models/User';
 import Device from '../../src/models/Device';
 import PaymentCard from '../../src/models/PaymentCard';
+import { AuthenticatedRequest } from '../../src/interfaces/request.interface';
 
 jest.mock('../../src/models/User');
 jest.mock('../../src/models/Device');
@@ -26,7 +27,7 @@ jest.mock('../../src/models/PaymentCard', () => ({
 }));
 
 describe('User Controller', () => {
-  let mockRequest: Partial<Request>;
+  let mockRequest: Partial<AuthenticatedRequest>;
   let mockResponse: Response;
   let jsonFunction: jest.Mock;
   let sendFunction: jest.Mock;
@@ -89,7 +90,7 @@ describe('User Controller', () => {
 
     it('should return 500 if server error occurs', async () => {
       (User.findOne as jest.Mock).mockRejectedValue(
-        new Error('Database error')
+        new Error('Database error'),
       );
 
       await createUser(mockRequest as Request, mockResponse);
@@ -105,8 +106,8 @@ describe('User Controller', () => {
   describe('getUser', () => {
     beforeEach(() => {
       mockRequest = {
-        user: { id: 'testUserId' },
-      } as any;
+        user: { id: 'testUserId', name: 'Chill', surname: 'Guy' },
+      };
     });
 
     it('should return user data successfully', async () => {
@@ -117,7 +118,7 @@ describe('User Controller', () => {
       };
       (User.findById as jest.Mock).mockResolvedValue(mockUser);
 
-      await getUser(mockRequest as Request, mockResponse);
+      await getUser(mockRequest as AuthenticatedRequest, mockResponse);
 
       expect(mockResponse.status).toHaveBeenCalledWith(200);
       expect(jsonFunction).toHaveBeenCalledWith(mockUser);
@@ -126,7 +127,7 @@ describe('User Controller', () => {
     it('should return 404 if user not found', async () => {
       (User.findById as jest.Mock).mockResolvedValue(null);
 
-      await getUser(mockRequest as Request, mockResponse);
+      await getUser(mockRequest as AuthenticatedRequest, mockResponse);
 
       expect(mockResponse.status).toHaveBeenCalledWith(404);
       expect(jsonFunction).toHaveBeenCalledWith({
@@ -136,10 +137,10 @@ describe('User Controller', () => {
 
     it('should return 500 if server error occurs', async () => {
       (User.findById as jest.Mock).mockRejectedValue(
-        new Error('Database error')
+        new Error('Database error'),
       );
 
-      await getUser(mockRequest as Request, mockResponse);
+      await getUser(mockRequest as AuthenticatedRequest, mockResponse);
 
       expect(mockResponse.status).toHaveBeenCalledWith(500);
       expect(jsonFunction).toHaveBeenCalledWith({
@@ -152,16 +153,16 @@ describe('User Controller', () => {
   describe('updateUser', () => {
     beforeEach(() => {
       mockRequest = {
-        user: { id: 'testUserId' },
+        user: { id: 'testUserId', name: 'Chill', surname: 'Guy' },
         body: { name: 'Updated Name' },
-      } as any;
+      };
     });
 
     it('should update user successfully', async () => {
       const updatedUser = { _id: 'testUserId', name: 'Updated Name' };
       (User.findByIdAndUpdate as jest.Mock).mockResolvedValue(updatedUser);
 
-      await updateUser(mockRequest as Request, mockResponse);
+      await updateUser(mockRequest as AuthenticatedRequest, mockResponse);
 
       expect(mockResponse.status).toHaveBeenCalledWith(200);
       expect(jsonFunction).toHaveBeenCalledWith({
@@ -173,7 +174,7 @@ describe('User Controller', () => {
     it('should return 404 if user not found', async () => {
       (User.findByIdAndUpdate as jest.Mock).mockResolvedValue(null);
 
-      await updateUser(mockRequest as Request, mockResponse);
+      await updateUser(mockRequest as AuthenticatedRequest, mockResponse);
 
       expect(mockResponse.status).toHaveBeenCalledWith(404);
       expect(jsonFunction).toHaveBeenCalledWith({
@@ -183,10 +184,10 @@ describe('User Controller', () => {
 
     it('should return 500 if server error occurs', async () => {
       (User.findByIdAndUpdate as jest.Mock).mockRejectedValue(
-        new Error('Database error')
+        new Error('Database error'),
       );
 
-      await updateUser(mockRequest as Request, mockResponse);
+      await updateUser(mockRequest as AuthenticatedRequest, mockResponse);
 
       expect(mockResponse.status).toHaveBeenCalledWith(500);
       expect(jsonFunction).toHaveBeenCalledWith({
@@ -199,8 +200,8 @@ describe('User Controller', () => {
   describe('deleteUser', () => {
     beforeEach(() => {
       mockRequest = {
-        user: { id: 'testUserId' },
-      } as any;
+        user: { id: 'testUserId', name: 'Chill', surname: 'Guy' },
+      };
     });
 
     it('should delete user and associated devices successfully', async () => {
@@ -209,7 +210,7 @@ describe('User Controller', () => {
       (Device.deleteMany as jest.Mock).mockResolvedValue({});
       (PaymentCard.deleteMany as jest.Mock).mockResolvedValue({});
 
-      await deleteUser(mockRequest as Request, mockResponse);
+      await deleteUser(mockRequest as AuthenticatedRequest, mockResponse);
 
       expect(Device.deleteMany).toHaveBeenCalledWith({ ownerId: 'testUserId' });
       expect(PaymentCard.deleteMany).toHaveBeenCalledWith({
@@ -224,7 +225,7 @@ describe('User Controller', () => {
     it('should return 404 if user not found', async () => {
       (User.findByIdAndDelete as jest.Mock).mockResolvedValue(null);
 
-      await deleteUser(mockRequest as Request, mockResponse);
+      await deleteUser(mockRequest as AuthenticatedRequest, mockResponse);
 
       expect(mockResponse.status).toHaveBeenCalledWith(404);
       expect(jsonFunction).toHaveBeenCalledWith({
@@ -234,10 +235,10 @@ describe('User Controller', () => {
 
     it('should return 500 if server error occurs', async () => {
       (User.findByIdAndDelete as jest.Mock).mockRejectedValue(
-        new Error('Database error')
+        new Error('Database error'),
       );
 
-      await deleteUser(mockRequest as Request, mockResponse);
+      await deleteUser(mockRequest as AuthenticatedRequest, mockResponse);
 
       expect(mockResponse.status).toHaveBeenCalledWith(500);
       expect(jsonFunction).toHaveBeenCalledWith({
@@ -308,7 +309,7 @@ describe('User Controller', () => {
 
     it('should return 500 if server error occurs', async () => {
       (User.findOne as jest.Mock).mockRejectedValue(
-        new Error('Database error')
+        new Error('Database error'),
       );
 
       await authenticateUser(mockRequest as Request, mockResponse);
@@ -324,12 +325,12 @@ describe('User Controller', () => {
   describe('changePassword', () => {
     beforeEach(() => {
       mockRequest = {
-        user: { id: 'testUserId' },
+        user: { id: 'testUserId', name: 'Chill', surname: 'Guy' },
         body: {
           oldPassword: 'oldPassword123',
           newPassword: 'newPassword123',
         },
-      } as any;
+      };
     });
 
     it('should change password successfully', async () => {
@@ -344,7 +345,7 @@ describe('User Controller', () => {
       (bcrypt.hash as jest.Mock).mockResolvedValue(hashedNewPassword);
       (User.findByIdAndUpdate as jest.Mock).mockResolvedValue({});
 
-      await changePassword(mockRequest as Request, mockResponse);
+      await changePassword(mockRequest as AuthenticatedRequest, mockResponse);
 
       expect(mockResponse.status).toHaveBeenCalledWith(200);
       expect(jsonFunction).toHaveBeenCalledWith({
@@ -355,7 +356,7 @@ describe('User Controller', () => {
     it('should return 404 if user not found', async () => {
       (User.findById as jest.Mock).mockResolvedValue(null);
 
-      await changePassword(mockRequest as Request, mockResponse);
+      await changePassword(mockRequest as AuthenticatedRequest, mockResponse);
 
       expect(mockResponse.status).toHaveBeenCalledWith(404);
       expect(jsonFunction).toHaveBeenCalledWith({
@@ -372,7 +373,7 @@ describe('User Controller', () => {
       (User.findById as jest.Mock).mockResolvedValue(mockUser);
       (bcrypt.compare as jest.Mock).mockResolvedValue(false);
 
-      await changePassword(mockRequest as Request, mockResponse);
+      await changePassword(mockRequest as AuthenticatedRequest, mockResponse);
 
       expect(mockResponse.status).toHaveBeenCalledWith(400);
       expect(jsonFunction).toHaveBeenCalledWith({
@@ -382,10 +383,10 @@ describe('User Controller', () => {
 
     it('should return 500 if server error occurs', async () => {
       (User.findById as jest.Mock).mockRejectedValue(
-        new Error('Database error')
+        new Error('Database error'),
       );
 
-      await changePassword(mockRequest as Request, mockResponse);
+      await changePassword(mockRequest as AuthenticatedRequest, mockResponse);
 
       expect(mockResponse.status).toHaveBeenCalledWith(500);
       expect(jsonFunction).toHaveBeenCalledWith({

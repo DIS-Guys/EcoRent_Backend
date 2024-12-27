@@ -1,11 +1,14 @@
-import { NextFunction } from 'express';
-import { Request, Response } from 'express';
+import { NextFunction, Response } from 'express';
 import jwt from 'jsonwebtoken';
+import {
+  AuthenticatedRequest,
+  UserPayload,
+} from '../interfaces/request.interface';
 
 export const authenticateToken = (
-  req: Request,
+  req: AuthenticatedRequest,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
@@ -15,10 +18,13 @@ export const authenticateToken = (
   }
 
   try {
-    const user = jwt.verify(token, process.env.JWT_SECRET as string);
-    (req as any).user = user;
+    const user = jwt.verify(
+      token,
+      process.env.JWT_SECRET as string,
+    ) as UserPayload;
+    req.user = user;
     next();
-  } catch (err) {
+  } catch {
     res.status(403).json({ error: 'Invalid token' });
   }
 };

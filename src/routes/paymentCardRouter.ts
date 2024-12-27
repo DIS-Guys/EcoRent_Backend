@@ -11,17 +11,17 @@ const router = express.Router();
 router.post(
   '/addPaymentCard',
   authenticateToken as express.RequestHandler,
-  addPaymentCard as express.RequestHandler
+  addPaymentCard as unknown as express.RequestHandler,
 );
 router.get(
   '/getPaymentCardsByOwnerId',
   authenticateToken as express.RequestHandler,
-  getPaymentCardsByOwnerId as express.RequestHandler
+  getPaymentCardsByOwnerId as unknown as express.RequestHandler,
 );
 router.delete(
   '/deletePaymentCard/:id',
   authenticateToken as express.RequestHandler,
-  deletePaymentCard as express.RequestHandler
+  deletePaymentCard as unknown as express.RequestHandler,
 );
 
 export default router;

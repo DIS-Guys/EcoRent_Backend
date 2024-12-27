@@ -45,6 +45,7 @@ describe('Ticket Controller Tests', () => {
     };
 
     it('should successfully create new ticket', async () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const mockedTicket = new (Ticket as any)(mockTicketData);
       mockedTicket.save.mockResolvedValueOnce(mockTicketData);
 
@@ -56,6 +57,7 @@ describe('Ticket Controller Tests', () => {
     });
 
     it('should return error 500 if creation failed', async () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const mockedTicket = new (Ticket as any)(mockTicketData);
       mockedTicket.save.mockRejectedValueOnce(new Error('Database error'));
 
@@ -148,7 +150,7 @@ describe('Ticket Controller Tests', () => {
       });
 
       const response = await request(app).delete(
-        `/tickets/${mockId.toString()}`
+        `/tickets/${mockId.toString()}`,
       );
 
       expect(response.status).toBe(200);
@@ -159,7 +161,7 @@ describe('Ticket Controller Tests', () => {
       (Ticket.findByIdAndDelete as jest.Mock).mockResolvedValue(null);
 
       const response = await request(app).delete(
-        `/tickets/${mockId.toString()}`
+        `/tickets/${mockId.toString()}`,
       );
 
       expect(response.status).toBe(404);

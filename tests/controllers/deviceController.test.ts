@@ -11,21 +11,16 @@ import {
   deleteDevice,
 } from '../../src/controllers/deviceController';
 import Device from '../../src/models/Device';
-
-interface RequestWithUser extends Request {
-  user: {
-    id: string;
-  };
-}
+import { AuthenticatedRequest } from '../../src/interfaces/request.interface';
 
 jest.mock('../../src/models/Device');
 jest.mock('../../src/config/s3');
 jest.mock('../../src/utils/parseFormData');
 
 describe('Device Controller', () => {
-  let mockRequest: Partial<RequestWithUser>;
+  let mockRequest: Partial<AuthenticatedRequest>;
   let mockResponse: Partial<Response>;
-  const mockUser = { id: 'userId123' };
+  const mockUser = { id: 'userId123', name: 'Man', surname: 'Mannich' };
 
   beforeEach(() => {
     mockResponse = {
@@ -36,9 +31,8 @@ describe('Device Controller', () => {
   });
 
   describe('addDevice', () => {
-    let mockRequest: Partial<RequestWithUser>;
+    let mockRequest: Partial<AuthenticatedRequest>;
     let mockResponse: Partial<Response>;
-    const mockUser = { id: 'userId123' };
 
     beforeEach(() => {
       mockRequest = {
@@ -75,39 +69,50 @@ describe('Device Controller', () => {
       const mockDevice = {
         _id: '6765b6488cbb5aa421d7ccf2',
         title: 'Test Device',
-        images: [{
-          url: 'https://test-url.com/image.jpg',
-          width: 800,
-          height: 600
-        }],
+        images: [
+          {
+            url: 'https://test-url.com/image.jpg',
+            width: 800,
+            height: 600,
+          },
+        ],
         ownerId: 'userId123',
         save: jest.fn().mockResolvedValue({
           _id: '6765b6488cbb5aa421d7ccf2',
           title: 'Test Device',
-          images: [{
-            url: 'https://test-url.com/image.jpg',
-            width: 800,
-            height: 600
-          }],
-          ownerId: 'userId123'
+          images: [
+            {
+              url: 'https://test-url.com/image.jpg',
+              width: 800,
+              height: 600,
+            },
+          ],
+          ownerId: 'userId123',
         }),
         toObject: jest.fn().mockReturnValue({
           _id: '6765b6488cbb5aa421d7ccf2',
           title: 'Test Device',
-          images: [{
-            url: 'https://test-url.com/image.jpg',
-            width: 800,
-            height: 600
-          }],
-          ownerId: 'userId123'
-        })
+          images: [
+            {
+              url: 'https://test-url.com/image.jpg',
+              width: 800,
+              height: 600,
+            },
+          ],
+          ownerId: 'userId123',
+        }),
       };
 
-      (parseFormDataUtil.parseFormData as jest.Mock).mockReturnValue(mockParsedData);
+      (parseFormDataUtil.parseFormData as jest.Mock).mockReturnValue(
+        mockParsedData,
+      );
       (s3Config.uploadToS3 as jest.Mock).mockResolvedValue(mockS3Response);
       (Device as unknown as jest.Mock).mockImplementation(() => mockDevice);
 
-      await addDevice(mockRequest as Request, mockResponse as Response);
+      await addDevice(
+        mockRequest as AuthenticatedRequest,
+        mockResponse as Response,
+      );
 
       expect(mockResponse.status).toHaveBeenCalledWith(201);
       expect(mockResponse.json).toHaveBeenCalledWith({
@@ -115,13 +120,15 @@ describe('Device Controller', () => {
         device: expect.objectContaining({
           _id: '6765b6488cbb5aa421d7ccf2',
           title: 'Test Device',
-          images: [{
-            url: 'https://test-url.com/image.jpg',
-            width: 800,
-            height: 600
-          }],
-          ownerId: 'userId123'
-        })
+          images: [
+            {
+              url: 'https://test-url.com/image.jpg',
+              width: 800,
+              height: 600,
+            },
+          ],
+          ownerId: 'userId123',
+        }),
       });
     });
   });
@@ -166,7 +173,7 @@ describe('Device Controller', () => {
       expect(mockResponse.json).toHaveBeenCalledWith(
         expect.objectContaining({
           message: 'Помилка сервера.',
-        })
+        }),
       );
     });
   });
@@ -187,8 +194,8 @@ describe('Device Controller', () => {
       (Device.find as jest.Mock).mockResolvedValue(mockDevices);
 
       await getDevicesByOwnerId(
-        mockRequest as RequestWithUser,
-        mockResponse as Response
+        mockRequest as AuthenticatedRequest,
+        mockResponse as Response,
       );
 
       expect(mockResponse.status).toHaveBeenCalledWith(200);
@@ -199,15 +206,15 @@ describe('Device Controller', () => {
       (Device.find as jest.Mock).mockRejectedValue(new Error('DB Error'));
 
       await getDevicesByOwnerId(
-        mockRequest as RequestWithUser,
-        mockResponse as Response
+        mockRequest as AuthenticatedRequest,
+        mockResponse as Response,
       );
 
       expect(mockResponse.status).toHaveBeenCalledWith(500);
       expect(mockResponse.json).toHaveBeenCalledWith(
         expect.objectContaining({
           message: 'Помилка сервера.',
-        })
+        }),
       );
     });
   });
@@ -240,7 +247,7 @@ describe('Device Controller', () => {
       expect(mockResponse.json).toHaveBeenCalledWith(
         expect.objectContaining({
           message: 'Помилка сервера.',
-        })
+        }),
       );
     });
   });
@@ -260,7 +267,10 @@ describe('Device Controller', () => {
     it('should handle device not found', async () => {
       (Device.findByIdAndUpdate as jest.Mock).mockResolvedValue(null);
 
-      await updateDevice(mockRequest as Request, mockResponse as Response);
+      await updateDevice(
+        mockRequest as AuthenticatedRequest,
+        mockResponse as Response,
+      );
 
       expect(mockResponse.status).toHaveBeenCalledWith(404);
       expect(mockResponse.json).toHaveBeenCalledWith({
@@ -271,13 +281,18 @@ describe('Device Controller', () => {
     it('should handle unauthorized update', async () => {
       const mockUpdatedDevice = {
         _id: mockDeviceId,
-        ownerId: 'differentUserId', // Different from mockUser.id
-        ...mockUpdates
+        ownerId: 'differentUserId',
+        ...mockUpdates,
       };
 
-      (Device.findByIdAndUpdate as jest.Mock).mockResolvedValue(mockUpdatedDevice);
+      (Device.findByIdAndUpdate as jest.Mock).mockResolvedValue(
+        mockUpdatedDevice,
+      );
 
-      await updateDevice(mockRequest as Request, mockResponse as Response);
+      await updateDevice(
+        mockRequest as AuthenticatedRequest,
+        mockResponse as Response,
+      );
 
       expect(mockResponse.status).toHaveBeenCalledWith(403);
       expect(mockResponse.json).toHaveBeenCalledWith({
@@ -289,17 +304,22 @@ describe('Device Controller', () => {
       const mockUpdatedDevice = {
         _id: mockDeviceId,
         ownerId: mockUser.id,
-        ...mockUpdates
+        ...mockUpdates,
       };
 
-      (Device.findByIdAndUpdate as jest.Mock).mockResolvedValue(mockUpdatedDevice);
+      (Device.findByIdAndUpdate as jest.Mock).mockResolvedValue(
+        mockUpdatedDevice,
+      );
 
-      await updateDevice(mockRequest as Request, mockResponse as Response);
+      await updateDevice(
+        mockRequest as AuthenticatedRequest,
+        mockResponse as Response,
+      );
 
       expect(mockResponse.status).toHaveBeenCalledWith(200);
       expect(mockResponse.json).toHaveBeenCalledWith({
         message: 'Дані пристрою оновлено.',
-        updatedDevice: mockUpdatedDevice
+        updatedDevice: mockUpdatedDevice,
       });
     });
   });
@@ -318,8 +338,8 @@ describe('Device Controller', () => {
       (Device.findById as jest.Mock).mockResolvedValue(null);
 
       await deleteDevice(
-        mockRequest as RequestWithUser,
-        mockResponse as Response
+        mockRequest as AuthenticatedRequest,
+        mockResponse as Response,
       );
 
       expect(mockResponse.status).toHaveBeenCalledWith(404);
@@ -338,8 +358,8 @@ describe('Device Controller', () => {
       (Device.findById as jest.Mock).mockResolvedValue(mockDevice);
 
       await deleteDevice(
-        mockRequest as RequestWithUser,
-        mockResponse as Response
+        mockRequest as AuthenticatedRequest,
+        mockResponse as Response,
       );
 
       expect(mockResponse.status).toHaveBeenCalledWith(403);

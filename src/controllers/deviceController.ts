@@ -3,15 +3,16 @@ import Device, { IDevice } from '../models/Device';
 import { parseFormData } from '../utils/parseFormData';
 import { deleteFromS3, uploadToS3 } from '../config/s3';
 import { DeviceImage } from '../interfaces/device.interface';
+import { AuthenticatedRequest } from '../interfaces/request.interface';
 
-export const addDevice = async (req: Request, res: Response) => {
+export const addDevice = async (req: AuthenticatedRequest, res: Response) => {
   const deviceInfo = req.body;
   const deviceImages = req.files as Express.Multer.File[];
 
   try {
     const parsedDeviceInfo = parseFormData(deviceInfo);
     const uploadedImages = await Promise.all(
-      deviceImages.map((file) => uploadToS3(file))
+      deviceImages.map((file) => uploadToS3(file)),
     );
     const imageUrls = uploadedImages.map((image) => image.Location);
     const images: DeviceImage[] = imageUrls.map((url, index) => ({
@@ -26,7 +27,7 @@ export const addDevice = async (req: Request, res: Response) => {
       ...parsedDeviceInfo,
       isInRent: false,
       images,
-      ownerId: (req as any).user.id,
+      ownerId: req.user.id,
     });
     await device.save();
 
@@ -51,8 +52,11 @@ export const getDevice = async (req: Request, res: Response) => {
   }
 };
 
-export const getDevicesByOwnerId = async (req: Request, res: Response) => {
-  const ownerId = (req as any).user.id;
+export const getDevicesByOwnerId = async (
+  req: AuthenticatedRequest,
+  res: Response,
+) => {
+  const ownerId = req.user.id;
 
   try {
     const devices = await Device.find({ ownerId });
@@ -73,8 +77,11 @@ export const getAllDevices = async (req: Request, res: Response) => {
   }
 };
 
-export const updateDevice = async (req: Request, res: Response) => {
-  const ownerId = (req as any).user.id;
+export const updateDevice = async (
+  req: AuthenticatedRequest,
+  res: Response,
+) => {
+  const ownerId = req.user.id;
   const { id } = req.params;
   const updates = req.body;
 
@@ -97,9 +104,12 @@ export const updateDevice = async (req: Request, res: Response) => {
   }
 };
 
-export const deleteDevice = async (req: Request, res: Response) => {
+export const deleteDevice = async (
+  req: AuthenticatedRequest,
+  res: Response,
+) => {
   const { id } = req.params;
-  const ownerId = (req as any).user.id;
+  const ownerId = req.user.id;
 
   try {
     const device = await Device.findById(id);

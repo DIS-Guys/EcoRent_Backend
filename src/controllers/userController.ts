@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import User, { IUser } from '../models/User';
 import Device from '../models/Device';
 import PaymentCard from '../models/PaymentCard';
+import { AuthenticatedRequest } from '../interfaces/request.interface';
 
 export const createUser = async (req: Request, res: Response) => {
   const { name, surname, email, password } = req.body;
@@ -32,8 +33,8 @@ export const createUser = async (req: Request, res: Response) => {
   }
 };
 
-export const getUser = async (req: Request, res: Response) => {
-  const id = (req as any).user.id;
+export const getUser = async (req: AuthenticatedRequest, res: Response) => {
+  const id = req.user.id;
 
   try {
     const user = await User.findById(id);
@@ -48,8 +49,8 @@ export const getUser = async (req: Request, res: Response) => {
   }
 };
 
-export const updateUser = async (req: Request, res: Response) => {
-  const id = (req as any).user.id;
+export const updateUser = async (req: AuthenticatedRequest, res: Response) => {
+  const id = req.user.id;
   const updates = req.body;
 
   try {
@@ -69,8 +70,8 @@ export const updateUser = async (req: Request, res: Response) => {
   }
 };
 
-export const deleteUser = async (req: Request, res: Response) => {
-  const id = (req as any).user.id;
+export const deleteUser = async (req: AuthenticatedRequest, res: Response) => {
+  const id = req.user.id;
 
   try {
     const deletedUser = await User.findByIdAndDelete(id);
@@ -103,7 +104,7 @@ export const authenticateUser = async (req: Request, res: Response) => {
     const token = jwt.sign(
       { id: user._id, name: user.name, surname: user.surname },
       process.env.JWT_SECRET as string,
-      { expiresIn: '2 days' }
+      { expiresIn: '2 days' },
     );
 
     res.json({ token, message: 'Успішний вхід.' });
@@ -112,8 +113,11 @@ export const authenticateUser = async (req: Request, res: Response) => {
   }
 };
 
-export const changePassword = async (req: Request, res: Response) => {
-  const id = (req as any).user.id;
+export const changePassword = async (
+  req: AuthenticatedRequest,
+  res: Response,
+) => {
+  const id = req.user.id;
   const { oldPassword, newPassword } = req.body;
 
   try {

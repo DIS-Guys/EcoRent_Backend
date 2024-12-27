@@ -27,24 +27,24 @@ router.post(
   '/addDevice',
   upload.array('images', 10),
   authenticateToken as express.RequestHandler,
-  addDevice as express.RequestHandler
+  addDevice as unknown as express.RequestHandler,
 );
 router.get('/getDevice/:id', getDevice as express.RequestHandler);
 router.get(
   '/getOwnerDevices',
   authenticateToken as express.RequestHandler,
-  getDevicesByOwnerId as express.RequestHandler
+  getDevicesByOwnerId as unknown as express.RequestHandler,
 );
 router.get('/getAllDevices', getAllDevices as express.RequestHandler);
 router.put(
   '/updateDevice/:id',
   authenticateToken as express.RequestHandler,
-  updateDevice as express.RequestHandler
+  updateDevice as unknown as express.RequestHandler,
 );
 router.delete(
   '/deleteDevice/:id',
   authenticateToken as express.RequestHandler,
-  deleteDevice as express.RequestHandler
+  deleteDevice as unknown as express.RequestHandler,
 );
 
 export default router;

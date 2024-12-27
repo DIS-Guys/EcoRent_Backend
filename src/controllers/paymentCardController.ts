@@ -1,9 +1,13 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import PaymentCard, { IPaymentCard } from '../models/PaymentCard';
+import { AuthenticatedRequest } from '../interfaces/request.interface';
 
-export const addPaymentCard = async (req: Request, res: Response) => {
+export const addPaymentCard = async (
+  req: AuthenticatedRequest,
+  res: Response,
+) => {
   const { cardNumber, expiryDate, ownerName } = req.body;
-  const ownerId = (req as any).user.id;
+  const ownerId = req.user.id;
 
   try {
     const paymentCard: IPaymentCard = new PaymentCard({
@@ -20,8 +24,11 @@ export const addPaymentCard = async (req: Request, res: Response) => {
   }
 };
 
-export const getPaymentCardsByOwnerId = async (req: Request, res: Response) => {
-  const ownerId = (req as any).user.id;
+export const getPaymentCardsByOwnerId = async (
+  req: AuthenticatedRequest,
+  res: Response,
+) => {
+  const ownerId = req.user.id;
 
   try {
     const paymentCards = await PaymentCard.find({ ownerId });
@@ -32,9 +39,12 @@ export const getPaymentCardsByOwnerId = async (req: Request, res: Response) => {
   }
 };
 
-export const deletePaymentCard = async (req: Request, res: Response) => {
+export const deletePaymentCard = async (
+  req: AuthenticatedRequest,
+  res: Response,
+) => {
   const { id } = req.params;
-  const ownerId = (req as any).user.id;
+  const ownerId = req.user.id;
 
   try {
     const paymentCard = await PaymentCard.findById(id);

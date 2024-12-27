@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export function parseFormData(data: { [key: string]: string }) {
   const parsedData: { [key: string]: any } = {};
 
