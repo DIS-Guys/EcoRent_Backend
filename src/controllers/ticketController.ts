@@ -1,12 +1,11 @@
 import { Request, Response } from 'express';
-import Ticket, { ITicket } from '../models/Ticket';
+import { TicketService } from '../services/TicketService';
 
 export const createTicket = async (req: Request, res: Response) => {
   const { userEmail, message } = req.body;
 
   try {
-    const ticket: ITicket = new Ticket({ userEmail, message });
-    await ticket.save();
+    const ticket = await TicketService.createTicket(userEmail, message);
 
     res.status(201).json({ message: 'Тікет створено.', ticket });
   } catch (error) {
@@ -18,21 +17,20 @@ export const getTicket = async (req: Request, res: Response) => {
   const { id } = req.params;
 
   try {
-    const ticket = await Ticket.findById(id);
-
-    if (!ticket) {
-      return res.status(404).json({ message: 'Тікет не знайдено.' });
-    }
+    const ticket = await TicketService.getTicket(id);
 
     res.status(200).json(ticket);
   } catch (error) {
+    if (error instanceof Error && error.message === 'NOT_FOUND') {
+      return res.status(404).json({ message: 'Тікет не знайдено.' });
+    }
     res.status(500).json({ message: 'Помилка сервера.', error });
   }
 };
 
 export const getAllTickets = async (req: Request, res: Response) => {
   try {
-    const tickets = await Ticket.find();
+    const tickets = await TicketService.getAllTickets();
 
     res.status(200).json(tickets);
   } catch (error) {
@@ -44,14 +42,13 @@ export const deleteTicket = async (req: Request, res: Response) => {
   const { id } = req.params;
 
   try {
-    const deletedTicket = await Ticket.findByIdAndDelete(id);
-
-    if (!deletedTicket) {
-      return res.status(404).json({ message: 'Тікет не знайдено.' });
-    }
+    await TicketService.deleteTicket(id);
 
     res.status(200).json({ message: 'Тікет успішно видалено.' });
   } catch (error) {
+    if (error instanceof Error && error.message === 'NOT_FOUND') {
+      return res.status(404).json({ message: 'Тікет не знайдено.' });
+    }
     res.status(500).json({ message: 'Помилка сервера.', error });
   }
 };
