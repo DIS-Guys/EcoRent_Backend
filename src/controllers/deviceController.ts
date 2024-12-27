@@ -1,5 +1,4 @@
 import { Request, Response } from 'express';
-import { IDevice } from '../models/Device';
 import { DeviceData } from '../interfaces/device.interface';
 import { AuthenticatedRequest } from '../interfaces/request.interface';
 import { DeviceService } from '../services/DeviceService';
@@ -63,7 +62,7 @@ export const updateDevice = async (
   res: Response,
 ) => {
   const { id } = req.params;
-  const updates = req.body as Partial<IDevice>;
+  const updates = req.body;
   const ownerId = req.user.id;
 
   try {
