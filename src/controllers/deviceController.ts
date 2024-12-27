@@ -1,35 +1,19 @@
 import { Request, Response } from 'express';
-import Device, { IDevice } from '../models/Device';
-import { parseFormData } from '../utils/parseFormData';
-import { deleteFromS3, uploadToS3 } from '../config/s3';
-import { DeviceImage } from '../interfaces/device.interface';
+import { IDevice } from '../models/Device';
+import { DeviceData } from '../interfaces/device.interface';
 import { AuthenticatedRequest } from '../interfaces/request.interface';
+import { DeviceService } from '../services/DeviceService';
 
 export const addDevice = async (req: AuthenticatedRequest, res: Response) => {
-  const deviceInfo = req.body;
+  const deviceInfo = req.body as DeviceData;
   const deviceImages = req.files as Express.Multer.File[];
 
   try {
-    const parsedDeviceInfo = parseFormData(deviceInfo);
-    const uploadedImages = await Promise.all(
-      deviceImages.map((file) => uploadToS3(file)),
+    const device = await DeviceService.createDevice(
+      deviceInfo,
+      deviceImages,
+      req.user.id,
     );
-    const imageUrls = uploadedImages.map((image) => image.Location);
-    const images: DeviceImage[] = imageUrls.map((url, index) => ({
-      url,
-      width: parsedDeviceInfo.imageDimensions[index].width,
-      height: parsedDeviceInfo.imageDimensions[index].height,
-    }));
-
-    delete parsedDeviceInfo.imageDimensions;
-
-    const device: IDevice = new Device({
-      ...parsedDeviceInfo,
-      isInRent: false,
-      images,
-      ownerId: req.user.id,
-    });
-    await device.save();
 
     res.status(201).json({ message: 'Пристрій додано.', device });
   } catch (error) {
@@ -41,10 +25,7 @@ export const getDevice = async (req: Request, res: Response) => {
   const { id } = req.params;
 
   try {
-    const device = await Device.findById(id).populate({
-      path: 'ownerId',
-      select: 'name surname phoneNumber town street region',
-    });
+    const device = await DeviceService.getDevice(id);
 
     res.status(200).json(device);
   } catch (error) {
@@ -59,7 +40,7 @@ export const getDevicesByOwnerId = async (
   const ownerId = req.user.id;
 
   try {
-    const devices = await Device.find({ ownerId });
+    const devices = await DeviceService.getDevicesByOwnerId(ownerId);
 
     res.status(200).json(devices);
   } catch (error) {
@@ -69,7 +50,7 @@ export const getDevicesByOwnerId = async (
 
 export const getAllDevices = async (req: Request, res: Response) => {
   try {
-    const devices = await Device.find().populate('ownerId', 'town');
+    const devices = await DeviceService.getAllDevices();
 
     res.status(200).json(devices);
   } catch (error) {
@@ -81,25 +62,25 @@ export const updateDevice = async (
   req: AuthenticatedRequest,
   res: Response,
 ) => {
-  const ownerId = req.user.id;
   const { id } = req.params;
-  const updates = req.body;
+  const updates = req.body as Partial<IDevice>;
+  const ownerId = req.user.id;
 
   try {
-    const updatedDevice = await Device.findByIdAndUpdate(id, updates, {
-      new: true,
-    });
-
-    if (!updatedDevice) {
-      return res.status(404).json({ message: 'Пристрій не знайдено.' });
-    }
-
-    if (updatedDevice.ownerId.toString() !== ownerId) {
-      return res.status(403).json({ message: 'Відмовлено у доступі.' });
-    }
+    const updatedDevice = await DeviceService.updateDevice(
+      id,
+      updates,
+      ownerId,
+    );
 
     res.status(200).json({ message: 'Дані пристрою оновлено.', updatedDevice });
   } catch (error) {
+    if (error instanceof Error && error.message === 'NOT_FOUND') {
+      return res.status(404).json({ message: 'Пристрій не знайдено.' });
+    }
+    if (error instanceof Error && error.message === 'FORBIDDEN') {
+      return res.status(403).json({ message: 'Відмовлено у доступі.' });
+    }
     res.status(500).json({ message: 'Помилка сервера.', error });
   }
 };
@@ -112,21 +93,16 @@ export const deleteDevice = async (
   const ownerId = req.user.id;
 
   try {
-    const device = await Device.findById(id);
-    if (!device) {
-      return res.status(404).json({ message: 'Пристрій не знайдено.' });
-    }
-
-    if (device.ownerId.toString() !== ownerId) {
-      return res.status(403).json({ message: 'Відмовлено у доступі.' });
-    }
-
-    const images = device.images;
-    await Promise.all(images.map((image) => deleteFromS3(image.url)));
-    await Device.findByIdAndDelete(id);
+    await DeviceService.deleteDevice(id, ownerId);
 
     res.status(200).json({ message: 'Пристрій успішно видалено.' });
   } catch (error) {
+    if (error instanceof Error && error.message === 'NOT_FOUND') {
+      return res.status(404).json({ message: 'Пристрій не знайдено.' });
+    }
+    if (error instanceof Error && error.message === 'FORBIDDEN') {
+      return res.status(403).json({ message: 'Відмовлено у доступі.' });
+    }
     res.status(500).json({ message: 'Помилка сервера.', error });
   }
 };
