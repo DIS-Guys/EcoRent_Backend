@@ -3,18 +3,18 @@ import { AuthenticatedRequest } from '../interfaces/request.interface';
 import { PaymentCardService } from '../services/PaymentCardService';
 
 export const addPaymentCard = async (
-    req: AuthenticatedRequest,
-    res: Response,
+  req: AuthenticatedRequest,
+  res: Response,
 ) => {
   const { cardNumber, expiryDate, ownerName } = req.body;
   const ownerId = req.user.id;
 
   try {
     const paymentCard = await PaymentCardService.createPaymentCard(
-        cardNumber,
-        expiryDate,
-        ownerName,
-        ownerId,
+      cardNumber,
+      expiryDate,
+      ownerName,
+      ownerId,
     );
 
     res.status(201).json({ message: 'Платіжна картка додана.', paymentCard });
@@ -24,14 +24,14 @@ export const addPaymentCard = async (
 };
 
 export const getPaymentCardsByOwnerId = async (
-    req: AuthenticatedRequest,
-    res: Response,
+  req: AuthenticatedRequest,
+  res: Response,
 ) => {
   const ownerId = req.user.id;
 
   try {
     const paymentCards =
-        await PaymentCardService.getPaymentCardsByOwnerId(ownerId);
+      await PaymentCardService.getPaymentCardsByOwnerId(ownerId);
 
     res.status(200).json(paymentCards);
   } catch (error) {
@@ -40,8 +40,8 @@ export const getPaymentCardsByOwnerId = async (
 };
 
 export const deletePaymentCard = async (
-    req: AuthenticatedRequest,
-    res: Response,
+  req: AuthenticatedRequest,
+  res: Response,
 ) => {
   const { id } = req.params;
   const ownerId = req.user.id;
