@@ -175,7 +175,7 @@ describe('Payment Card Controller', () => {
 
       expect(mockResponse.status).toHaveBeenCalledWith(403);
       expect(mockResponse.json).toHaveBeenCalledWith({
-        message: 'Відмовлено у доступі',
+        message: 'Відмовлено у доступі.',
       });
     });
 
