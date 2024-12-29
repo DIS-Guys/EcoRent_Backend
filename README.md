@@ -15,7 +15,7 @@
 
 ### ER Diagram
 
-![ER Diagram](link)
+![EcoRent ER Diagram](https://github.com/user-attachments/assets/de656458-a995-47f4-abb7-a0ec1787665d)
 
 ### DFD Diagram
 
