@@ -1,4 +1,4 @@
-import { parseFormData } from '../../src/utils/parseFormData';
+import { parseFormData } from '../../../src/utils/parseFormData';
 
 describe('parseFormData', () => {
   it('should parse JSON strings correctly', () => {

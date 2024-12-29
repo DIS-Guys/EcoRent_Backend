@@ -7,7 +7,7 @@
     "start": "node dist/index.js",
     "dev": "nodemon src/index.ts",
     "test": "jest",
-    "test:api": "newman run tests/postman/postman_collection.json -e tests/postman/postman_environment.json",
+    "test:api": "newman run tests/integration/postman/postman_collection.json -e tests/integration/postman/postman_environment.json",
     "lint": "eslint \"{src,tests}/**/*.ts\"",
     "lint:fix": "eslint \"{src,tests}/**/*.ts\" --fix",
     "format": "prettier --write \"{src,tests}/**/*.ts\""

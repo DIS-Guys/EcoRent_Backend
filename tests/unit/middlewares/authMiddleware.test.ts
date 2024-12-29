@@ -1,23 +1,18 @@
-import { authenticateToken } from '../../src/middlewares/authMiddleware';
+import { authenticateToken } from '../../../src/middlewares/authMiddleware';
 import request from 'supertest';
 import express from 'express';
 import jwt from 'jsonwebtoken';
 
+const app = express();
+app.use(express.json());
+app.use(authenticateToken as express.RequestHandler);
+app.get('/protected', (req, res) => {
+  res.status(200).json({ message: 'Access granted' });
+});
+
 jest.mock('jsonwebtoken');
 
 describe('authenticateToken middleware', () => {
-  let app: express.Application;
-
-  beforeAll(() => {
-    app = express();
-    app.use(express.json());
-    app.use(authenticateToken as express.RequestHandler);
-
-    app.get('/protected', (req, res) => {
-      res.status(200).json({ message: 'Access granted' });
-    });
-  });
-
   it('should return 401 if token is missing', async () => {
     const response = await request(app).get('/protected');
 
