@@ -11,12 +11,10 @@
 
 - Kobziev Daniil:<br>
   https://github.com/DIS-Guys/EcoRent_Backend/pull/29/commits/d21fe9015467e2124f92c138c83812c1da69306d<br>
-- Yukhymenko Stas:<br>
-  <br>
 - Katynskyi Illya:<br>
   https://github.com/DIS-Guys/EcoRent_Backend/pull/29/commits/a7ff402ee10d398cb70e39b3def9077d832a337f<br>
-- Solohub Oleksandr:<br>
-  <br>
+- Solohub Oleksandr && Yukhymenko Stas:<br>
+  https://github.com/DIS-Guys/EcoRent_Backend/pull/29/commits/3be06070e83ba871bdad6609570d16930987752b<br>
 
 ### Class Diagram
 
@@ -28,7 +26,7 @@
 
 ### DFD Diagram
 
-![DFD Diagram](https://github.com/user-attachments/assets/ff790c3e-382a-4414-b30a-954b3d622a7d)
+![EcoRent DFD Diagram](https://github.com/user-attachments/assets/ff790c3e-382a-4414-b30a-954b3d622a7d)
 
 ## Lab5
 
