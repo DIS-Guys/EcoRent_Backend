@@ -11,7 +11,7 @@
 
 ### Class Diagram
 
-![Class Diagram](link)
+![EcoRent Class Diagram](https://github.com/user-attachments/assets/c85d205a-a158-4978-a30b-1ccd10b8ca93)
 
 ### ER Diagram
 
