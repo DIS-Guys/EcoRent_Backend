@@ -28,7 +28,7 @@
 
 ### DFD Diagram
 
-![DFD Diagram](link)
+![DFD Diagram](https://github.com/user-attachments/assets/ff790c3e-382a-4414-b30a-954b3d622a7d)
 
 ## Lab5
 
