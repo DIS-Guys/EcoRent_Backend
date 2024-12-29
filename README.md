@@ -24,17 +24,17 @@
 ## Lab5
 
 - Kobziev Daniil
-https://github.com/DIS-Guys/EcoRent_Backend/commit/01f4bdcf3980f649e699ece26581b7fa855451cf
-https://github.com/DIS-Guys/EcoRent_Backend/commit/45c88a89b2f52ce29cdc841dadb3352d387abf67
+https://github.com/DIS-Guys/EcoRent_Backend/commit/01f4bdcf3980f649e699ece26581b7fa855451cf<br>
+https://github.com/DIS-Guys/EcoRent_Backend/commit/45c88a89b2f52ce29cdc841dadb3352d387abf67<br>
 - Yukhymenko Stas:
-https://github.com/DIS-Guys/EcoRent_Backend/commit/deae4baf40312464acca72cb5a4867198f95ce62
-https://github.com/DIS-Guys/EcoRent_Backend/commit/09238b8ca2cba9e97dc6e85b05711c945a2a19b4
+https://github.com/DIS-Guys/EcoRent_Backend/commit/deae4baf40312464acca72cb5a4867198f95ce62<br>
+https://github.com/DIS-Guys/EcoRent_Backend/commit/09238b8ca2cba9e97dc6e85b05711c945a2a19b4<br>
 - Katynskyi Illya:
-https://github.com/DIS-Guys/EcoRent_Backend/commit/66341538ceaaad97ac1eaa9653f58b444b30da4e
-https://github.com/DIS-Guys/EcoRent_Backend/commit/04c2de4de8116e5f1516b6aaf25a5e8e057b3665
-https://github.com/DIS-Guys/EcoRent_Backend/commit/61abc7a8ebb32722d1cc71d7cc73d94f6b87590a
+https://github.com/DIS-Guys/EcoRent_Backend/commit/66341538ceaaad97ac1eaa9653f58b444b30da4e<br>
+https://github.com/DIS-Guys/EcoRent_Backend/commit/04c2de4de8116e5f1516b6aaf25a5e8e057b3665<br>
+https://github.com/DIS-Guys/EcoRent_Backend/commit/61abc7a8ebb32722d1cc71d7cc73d94f6b87590a<br>
 - Solohub Oleksandr: 
-https://github.com/DIS-Guys/EcoRent_Backend/commit/fac8e254786e9eed2be519247fe89f1d0a46f901
+https://github.com/DIS-Guys/EcoRent_Backend/commit/fac8e254786e9eed2be519247fe89f1d0a46f901<br>
 
 
 ## Lab8
