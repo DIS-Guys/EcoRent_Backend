@@ -1,4 +1,4 @@
-![image_2024-12-31_00-03-17](https://github.com/user-attachments/assets/19c65b43-1192-4f68-b6f0-0022fa624c40)## Ecorent project
+## Ecorent project
 
 ### Our team:
 
