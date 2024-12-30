@@ -1,4 +1,4 @@
-## Ecorent project
+![image_2024-12-31_00-03-17](https://github.com/user-attachments/assets/19c65b43-1192-4f68-b6f0-0022fa624c40)## Ecorent project
 
 ### Our team:
 
@@ -68,6 +68,62 @@ Profile Page: Score 97
 
 Rent Out Page: Score 99
 ![Скриншот 31-12-2024 001646](https://github.com/user-attachments/assets/87482b30-ea63-494c-931e-5a3676222f04)<br>
+
+### [Speed Insights](https://pagespeed.web.dev/)
+
+Main page
+![image_2024-12-31_00-03-17](https://github.com/user-attachments/assets/b4cde3c7-4252-4003-9c68-f0ffd73516ff)
+Performance: 90%
+Accessibility: 95%
+Best Practices: 100%
+SEO: 83%
+
+Rent Page
+![image_2024-12-31_00-04-36](https://github.com/user-attachments/assets/9138014c-4799-435e-a2e6-9cb7dbce5fdd)
+Performance: 74%
+Accessibility: 84%
+Best Practices: 100%
+SEO: 75%
+
+Support page
+![image_2024-12-31_00-06-09](https://github.com/user-attachments/assets/ac9aadfa-0ff8-4800-970c-f7db250780bd)
+Performance: 77%
+Accessibility: 95%
+Best Practices: 100%
+SEO: 83%
+
+Login Page
+![image_2024-12-31_00-06-55](https://github.com/user-attachments/assets/1110e7a9-f804-42f5-9efc-528adc7414e8)
+Performance: 77%
+Accessibility: 93%
+Best Practices: 96%
+SEO: 83%
+
+Conclusions:
+
+Main Page:
+Performance: 90% — the page loads quickly.
+Accessibility: 95% — high level of user accessibility.
+Best Practices: 100% — fully compliant with modern standards.
+SEO: 83% — a good level of search engine optimization.
+
+Rent Page:
+Performance: 74% — stable loading speed.
+Accessibility: 84% — user-friendly experience.
+Best Practices: 100% — aligned with best practices.
+SEO: 75% — adequate optimization for search engines.
+
+Support Page:
+Performance: 77% — meets modern performance standards.
+Accessibility: 95% — highly user-friendly.
+Best Practices: 100% — fully adheres to best practices.
+SEO: 83% — good optimization level.
+
+Login Page:
+Performance: 77% — consistent page performance.
+Accessibility: 93% — ensures comfortable usability.
+Best Practices: 96% — nearly perfect compliance.
+SEO: 83% — good level of optimization
 
 ### Load testing with JMeter
 
