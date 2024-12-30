@@ -55,7 +55,7 @@
 - Yukhymenko Stas:<br>
   https://github.com/DIS-Guys/EcoRent_Backend/pull/29/commits/5c02233e4d673a3bff19de3fb70eb9381a9b68e4<br>
 - Solohub Oleksandr:<br>
-  <br>
+  https://github.com/DIS-Guys/EcoRent_Backend/pull/29/commits/82a728645e4d6481239fbd7c9d781b1b319d11b8<br>
 
 Test using [Lighthouse](https://developer.chrome.com/docs/lighthouse/overview/)<br>
 
