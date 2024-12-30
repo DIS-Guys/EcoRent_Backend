@@ -45,6 +45,30 @@
 
 ## Lab8
 
+### Performance
+
+Test using [Lighthouse](https://developer.chrome.com/docs/lighthouse/overview/)<br>
+
+The performance testing with Lighthouse shows excellent results across the platform's main pages. The **Support** and **Rent Out** pages scored an impressive **99**, showing outstanding optimization. The **Profile Page** also performed very well with a score of **97**. The **Main Page** and **My Devices Page** scored **91** and **92**, which are very strong results. The **Rent Page** scored **87**, slightly lower but still good. Overall, the platform is fast and well-optimized, providing a smooth user experience. Great job!
+
+Main Page: Score 91
+![Скриншот 31-12-2024 000232](https://github.com/user-attachments/assets/2119e4fa-8674-4a47-ad42-a7f9cfcdf426)<br>
+
+Rent Page: Score 87
+![Скриншот 31-12-2024 000346](https://github.com/user-attachments/assets/d6b91ac9-a599-43f1-a375-76253272e6ed)<br>
+
+My Devices: Score 92
+![Скриншот 31-12-2024 000519](https://github.com/user-attachments/assets/731c43f3-766a-4cd5-98a7-1846a9e863dc)<br>
+
+Support Page: Score 99
+![Скриншот 31-12-2024 000649](https://github.com/user-attachments/assets/9b64c457-db26-4f2c-8f6d-ffe0a93847e5)<br>
+
+Profile Page: Score 97
+![Скриншот 31-12-2024 000741](https://github.com/user-attachments/assets/101c3eee-024b-45c9-9010-291f6807ee11)<br>
+
+Rent Out Page: Score 99
+![Скриншот 31-12-2024 001646](https://github.com/user-attachments/assets/87482b30-ea63-494c-931e-5a3676222f04)<br>
+
 ### Load testing with JMeter
 
 #### User interface
