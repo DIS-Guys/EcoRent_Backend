@@ -50,7 +50,8 @@
 - Kobziev Daniil:<br>
   https://github.com/DIS-Guys/EcoRent_Backend/pull/29/commits/a3445a0b961e9b9f80446123dc5b191e590b55ef<br>
 - Katynskyi Illya:<br>
-  <br>
+  https://github.com/DIS-Guys/EcoRent_Backend/pull/29/commits/8e975b154d5a7419b47246ef008b4ea0a5644ddd<br>
+  https://github.com/DIS-Guys/EcoRent_Backend/pull/29/commits/adb7bac785793be9b92b57ea135e1bdf930fa6b4<br>
 - Yukhymenko Stas:<br>
   https://github.com/DIS-Guys/EcoRent_Backend/pull/29/commits/5c02233e4d673a3bff19de3fb70eb9381a9b68e4<br>
 - Solohub Oleksandr:<br>
