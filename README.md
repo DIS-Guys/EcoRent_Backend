@@ -151,6 +151,21 @@ updateUser: Throughput 592 requests/minute, margin of error 27.
 
 All requests for user interface testing show good and stable throughput.
 
+#### Ticket interface
+
+![ticketPost](https://github.com/user-attachments/assets/c8b2c90f-c10c-48bb-8898-08f819f4fe2a)
+
+![getTicket](https://github.com/user-attachments/assets/832b13e0-6107-4016-af64-33c6aaa0ba77)
+
+![getAllTickets](https://github.com/user-attachments/assets/51e07790-3b6e-4eee-8056-c6bd4438a0ef)
+
+Testing the ticket interface:
+postTicket: Throughput 300 requests/minute, error 69.
+getTicket: Throughput 301 requests/minute, error 3.
+getAllTickets: Throughput 301 requests/minute, margin of error 3.
+
+All requests for testing the ticket interface demonstrate consistently strong and reliable performance metrics, indicating stable throughput across various scenarios. This highlights the robustness and efficiency of the system under test conditions.
+
 ## Lab9
 
 ### Short description
