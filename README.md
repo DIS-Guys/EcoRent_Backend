@@ -47,83 +47,92 @@
 
 ### Performance
 
+- Kobziev Daniil:<br>
+  https://github.com/DIS-Guys/EcoRent_Backend/pull/29/commits/a3445a0b961e9b9f80446123dc5b191e590b55ef<br>
+- Katynskyi Illya:<br>
+  <br>
+- Yukhymenko Stas:<br>
+  https://github.com/DIS-Guys/EcoRent_Backend/pull/29/commits/5c02233e4d673a3bff19de3fb70eb9381a9b68e4<br>
+- Solohub Oleksandr:<br>
+  <br>
+
 Test using [Lighthouse](https://developer.chrome.com/docs/lighthouse/overview/)<br>
 
 The performance testing with Lighthouse shows excellent results across the platform's main pages. The **Support** and **Rent Out** pages scored an impressive **99**, showing outstanding optimization. The **Profile Page** also performed very well with a score of **97**. The **Main Page** and **My Devices Page** scored **91** and **92**, which are very strong results. The **Rent Page** scored **87**, slightly lower but still good. Overall, the platform is fast and well-optimized, providing a smooth user experience. Great job!
 
-Main Page: Score 91
+#### Main Page: Score 91
 ![Скриншот 31-12-2024 000232](https://github.com/user-attachments/assets/2119e4fa-8674-4a47-ad42-a7f9cfcdf426)<br>
 
-Rent Page: Score 87
+#### Rent Page: Score 87
 ![Скриншот 31-12-2024 000346](https://github.com/user-attachments/assets/d6b91ac9-a599-43f1-a375-76253272e6ed)<br>
 
-My Devices: Score 92
+#### My Devices: Score 92
 ![Скриншот 31-12-2024 000519](https://github.com/user-attachments/assets/731c43f3-766a-4cd5-98a7-1846a9e863dc)<br>
 
-Support Page: Score 99
+#### Support Page: Score 99
 ![Скриншот 31-12-2024 000649](https://github.com/user-attachments/assets/9b64c457-db26-4f2c-8f6d-ffe0a93847e5)<br>
 
-Profile Page: Score 97
+#### Profile Page: Score 97
 ![Скриншот 31-12-2024 000741](https://github.com/user-attachments/assets/101c3eee-024b-45c9-9010-291f6807ee11)<br>
 
-Rent Out Page: Score 99
+#### Rent Out Page: Score 99
 ![Скриншот 31-12-2024 001646](https://github.com/user-attachments/assets/87482b30-ea63-494c-931e-5a3676222f04)<br>
 
 ### [Speed Insights](https://pagespeed.web.dev/)
 
-Main page
-![image_2024-12-31_00-03-17](https://github.com/user-attachments/assets/b4cde3c7-4252-4003-9c68-f0ffd73516ff)
-Performance: 90%
-Accessibility: 95%
-Best Practices: 100%
-SEO: 83%
+#### Main page<br>
+![image_2024-12-31_00-03-17](https://github.com/user-attachments/assets/b4cde3c7-4252-4003-9c68-f0ffd73516ff)<br>
+Performance: 90%<br>
+Accessibility: 95%<br>
+Best Practices: 100%<br>
+SEO: 83%<br>
 
-Rent Page
-![image_2024-12-31_00-04-36](https://github.com/user-attachments/assets/9138014c-4799-435e-a2e6-9cb7dbce5fdd)
-Performance: 74%
-Accessibility: 84%
-Best Practices: 100%
-SEO: 75%
+#### Rent Page<br>
+![image_2024-12-31_00-04-36](https://github.com/user-attachments/assets/9138014c-4799-435e-a2e6-9cb7dbce5fdd)<br>
+Performance: 74%<br>
+Accessibility: 84%<br>
+Best Practices: 100%<br>
+SEO: 75%<br>
 
-Support page
-![image_2024-12-31_00-06-09](https://github.com/user-attachments/assets/ac9aadfa-0ff8-4800-970c-f7db250780bd)
-Performance: 77%
-Accessibility: 95%
-Best Practices: 100%
-SEO: 83%
+#### Support page<br>
+![image_2024-12-31_00-06-09](https://github.com/user-attachments/assets/ac9aadfa-0ff8-4800-970c-f7db250780bd)<br>
+Performance: 77%<br>
+Accessibility: 95%<br>
+Best Practices: 100%<br>
+SEO: 83%<br>
 
-Login Page
-![image_2024-12-31_00-06-55](https://github.com/user-attachments/assets/1110e7a9-f804-42f5-9efc-528adc7414e8)
-Performance: 77%
-Accessibility: 93%
-Best Practices: 96%
-SEO: 83%
+#### Login Page<br>
+![image_2024-12-31_00-06-55](https://github.com/user-attachments/assets/1110e7a9-f804-42f5-9efc-528adc7414e8)<br>
+Performance: 77%<br>
+Accessibility: 93%<br>
+Best Practices: 96%<br>
+SEO: 83%<br>
 
-Conclusions:
+#### Conclusions:<br>
 
-Main Page:
-Performance: 90% — the page loads quickly.
-Accessibility: 95% — high level of user accessibility.
-Best Practices: 100% — fully compliant with modern standards.
-SEO: 83% — a good level of search engine optimization.
+#### Main Page:<br>
+Performance: 90% — the page loads quickly.<br>
+Accessibility: 95% — high level of user accessibility.<br>
+Best Practices: 100% — fully compliant with modern standards.<br>
+SEO: 83% — a good level of search engine optimization.<br>
 
-Rent Page:
-Performance: 74% — stable loading speed.
-Accessibility: 84% — user-friendly experience.
-Best Practices: 100% — aligned with best practices.
-SEO: 75% — adequate optimization for search engines.
+#### Rent Page:<br>
+Performance: 74% — stable loading speed.<br>
+Accessibility: 84% — user-friendly experience.<br>
+Best Practices: 100% — aligned with best practices.<br>
+SEO: 75% — adequate optimization for search engines.<br>
 
-Support Page:
-Performance: 77% — meets modern performance standards.
-Accessibility: 95% — highly user-friendly.
-Best Practices: 100% — fully adheres to best practices.
-SEO: 83% — good optimization level.
+#### Support Page:<br>
+Performance: 77% — meets modern performance standards.<br>
+Accessibility: 95% — highly user-friendly.<br>
+Best Practices: 100% — fully adheres to best practices.<br>
+SEO: 83% — good optimization level.<br>
 
-Login Page:
-Performance: 77% — consistent page performance.
-Accessibility: 93% — ensures comfortable usability.
-Best Practices: 96% — nearly perfect compliance.
-SEO: 83% — good level of optimization
+#### Login Page:<br>
+Performance: 77% — consistent page performance.<br>
+Accessibility: 93% — ensures comfortable usability.<br>
+Best Practices: 96% — nearly perfect compliance.<br>
+SEO: 83% — good level of optimization<br>
 
 ### Load testing with JMeter
 
