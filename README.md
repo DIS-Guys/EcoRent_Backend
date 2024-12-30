@@ -166,6 +166,18 @@ getAllTickets: Throughput 301 requests/minute, margin of error 3.
 
 All requests for testing the ticket interface demonstrate consistently strong and reliable performance metrics, indicating stable throughput across various scenarios. This highlights the robustness and efficiency of the system under test conditions.
 
+#### Cards interface
+
+![getCardsByOwnerId](https://github.com/user-attachments/assets/abcc9a8d-19ba-4716-85f1-acd13fc83e75)
+
+![postCards](https://github.com/user-attachments/assets/70b6466e-fb4a-47f2-839e-0fdafa39b5ac)
+
+Testing the card interface:
+getCardsByOwnerId: Throughput 300 requests/minute, error 96.
+postCards: Throughput 300 requests/minute, error 19.
+
+All requests for card interface testing show good and stable throughput.
+
 ## Lab9
 
 ### Short description
