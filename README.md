@@ -45,6 +45,21 @@
 
 ## Lab8
 
+### Load testing with JMeter
+
+![image_2024-12-31_00-05-22](https://github.com/user-attachments/assets/f0f8dd5b-4242-47b9-a79b-549c9eeec822)
+
+![image_2024-12-31_00-06-21](https://github.com/user-attachments/assets/4516ec72-4252-4aed-abcc-3e8a6a6b918c)
+
+![image_2024-12-31_00-06-58](https://github.com/user-attachments/assets/cf18f188-42d1-49cf-806b-090c6616fcf4)
+
+Testing the user interface:
+getUser: Throughput 591 requests/minute, error 79.
+login: Throughput 593 requests/minute, error 23.
+updateUser: Throughput 592 requests/minute, margin of error 27.
+
+All requests for user interface testing show good and stable throughput.
+
 ## Lab9
 
 ### Short description
