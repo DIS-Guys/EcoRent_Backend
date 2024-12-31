@@ -184,7 +184,10 @@ All requests for card interface testing show good and stable throughput.
 Our service, a peer-to-peer EcoFlow rental platform, is designed with scalability and modularity in mind. Using TypeScript across the project ensures type safety, making the system robust and reducing runtime errors. We employ MongoDB for data storage, which provides high performance for read and write operations, and AWS S3 for image storage, offering reliable and scalable solutions for large media files. These technologies eliminate bottlenecks in storage and retrieval processes. The system's modular design distributes responsibilities effectively among components such as user management, device listing, and technical support. Each component is independently testable and scalable, minimizing the risk of single points of failure. Additionally, the backend uses dependency injection patterns to ensure easy adaptability to changing requirements or integrations.
 
 ### Why the Service is Well-Designed
-Our service architecture follows modern design principles, ensuring no significant bottlenecks:
+Our service architecture follows modern design principles, ensuring no significant bottlenecks:<br>
+
+Horizontal Scalability: MongoDB and AWS S3 scale easily with increasing data and traffic.
+Strong Typing with TypeScript: Ensures consistency and reduces bugs across all components.
 
 ### Short description
 
