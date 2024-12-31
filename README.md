@@ -181,6 +181,8 @@ All requests for card interface testing show good and stable throughput.
 
 ## Lab9
 
+Our service, a peer-to-peer EcoFlow rental platform, is designed with scalability and modularity in mind. Using TypeScript across the project ensures type safety, making the system robust and reducing runtime errors. We employ MongoDB for data storage, which provides high performance for read and write operations, and AWS S3 for image storage, offering reliable and scalable solutions for large media files. These technologies eliminate bottlenecks in storage and retrieval processes. The system's modular design distributes responsibilities effectively among components such as user management, device listing, and technical support. Each component is independently testable and scalable, minimizing the risk of single points of failure. Additionally, the backend uses dependency injection patterns to ensure easy adaptability to changing requirements or integrations.
+
 ### Short description
 
 Our project is an innovative charging station rental site called EcoFlow, which allows users to both rent and lease portable power stations. The main goal of this project is to ensure the availability of chargers for those who need them on a short-term basis, as well as to create a platform for station owners to generate additional income. We aim to create an ecosystem that enables the convenient exchange of energy resources by optimising the use of charging stations. This solution will enable efficient use of resources by reducing the need to purchase expensive stations for temporary needs and will contribute to sustainable development as each station will be used as efficiently as possible.
