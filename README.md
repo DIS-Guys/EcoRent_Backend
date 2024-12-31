@@ -186,7 +186,7 @@ All requests for card interface testing show good and stable throughput.
 - Katynskyi Illya:<br>
   https://github.com/DIS-Guys/EcoRent_Backend/pull/29/commits/80bb0ddafc3e97882a78adf9bff53589ebbfd3b9<br>
 - Yukhymenko Stas:<br>
-  <br>
+  https://github.com/DIS-Guys/EcoRent_Backend/pull/29/commits/2ac27b8bb4fdb03e461538dafa494f955c30e8f3<br>
 - Solohub Oleksandr:<br>
   https://github.com/DIS-Guys/EcoRent_Backend/pull/29/commits/9770af9328b24522e78fa9417e6b3e3aaaaee976<br>
 
