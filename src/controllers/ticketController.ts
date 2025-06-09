@@ -1,11 +1,11 @@
 import { Request, Response } from 'express';
-import { TicketService } from '../services/TicketService';
+import serviceManager from '../services';
 
 export const createTicket = async (req: Request, res: Response) => {
   const { userEmail, message } = req.body;
 
   try {
-    const ticket = await TicketService.createTicket(userEmail, message);
+    const ticket = await serviceManager.createTicket(userEmail, message);
 
     res.status(201).json({ message: 'Тікет створено.', ticket });
   } catch (error) {
@@ -17,7 +17,7 @@ export const getTicket = async (req: Request, res: Response) => {
   const { id } = req.params;
 
   try {
-    const ticket = await TicketService.getTicket(id);
+    const ticket = await serviceManager.getTicket(id);
 
     res.status(200).json(ticket);
   } catch (error) {
@@ -30,7 +30,7 @@ export const getTicket = async (req: Request, res: Response) => {
 
 export const getAllTickets = async (req: Request, res: Response) => {
   try {
-    const tickets = await TicketService.getAllTickets();
+    const tickets = await serviceManager.getAllTickets();
 
     res.status(200).json(tickets);
   } catch (error) {
@@ -42,7 +42,7 @@ export const deleteTicket = async (req: Request, res: Response) => {
   const { id } = req.params;
 
   try {
-    await TicketService.deleteTicket(id);
+    await serviceManager.deleteTicket(id);
 
     res.status(200).json({ message: 'Тікет успішно видалено.' });
   } catch (error) {

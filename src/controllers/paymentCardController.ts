@@ -1,6 +1,6 @@
 import { Response } from 'express';
 import { AuthenticatedRequest } from '../interfaces/request.interface';
-import { PaymentCardService } from '../services/PaymentCardService';
+import serviceManager from '../services';
 
 export const addPaymentCard = async (
   req: AuthenticatedRequest,
@@ -10,7 +10,7 @@ export const addPaymentCard = async (
   const ownerId = req.user.id;
 
   try {
-    const paymentCard = await PaymentCardService.createPaymentCard(
+    const paymentCard = await serviceManager.createPaymentCard(
       cardNumber,
       expiryDate,
       ownerName,
@@ -31,7 +31,7 @@ export const getPaymentCardsByOwnerId = async (
 
   try {
     const paymentCards =
-      await PaymentCardService.getPaymentCardsByOwnerId(ownerId);
+      await serviceManager.getPaymentCardsByOwnerId(ownerId);
 
     res.status(200).json(paymentCards);
   } catch (error) {
@@ -47,7 +47,7 @@ export const deletePaymentCard = async (
   const ownerId = req.user.id;
 
   try {
-    await PaymentCardService.deletePaymentCard(id, ownerId);
+    await serviceManager.deletePaymentCard(id, ownerId);
 
     res.status(200).json({
       message: 'Платіжну картку успішно видалено.',
