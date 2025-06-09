@@ -1,14 +1,15 @@
-import { deleteFromS3, uploadToS3 } from '../config/s3';
-import { DeviceData, DeviceImage } from '../interfaces/device.interface';
-import Device, { IDevice } from '../models/Device';
-import { parseFormData } from '../utils/parseFormData';
+import { IDeviceService } from '../../interfaces/services/IDeviceService';
+import { deleteFromS3, uploadToS3 } from '../../config/s3';
+import { DeviceData, DeviceImage } from '../../interfaces/device.interface';
+import Device, { IDevice } from '../../models/Device';
+import { parseFormData } from '../../utils/parseFormData';
 
-export class DeviceService {
-  static async createDevice(
+export class DeviceService implements IDeviceService {
+  async createDevice(
     deviceInfo: DeviceData,
     deviceImages: Express.Multer.File[],
     userId: string,
-  ) {
+  ): Promise<IDevice> {
     const parsedDeviceInfo = parseFormData(deviceInfo);
 
     const uploadedImages = await Promise.all(
@@ -32,36 +33,29 @@ export class DeviceService {
     });
 
     await device.save();
-
     return device;
   }
 
-  static async getDevice(id: string) {
-    const device = await Device.findById(id).populate({
+  async getDevice(id: string): Promise<IDevice | null> {
+    return await Device.findById(id).populate({
       path: 'ownerId',
       select: 'name surname phoneNumber town street region',
     });
-
-    return device;
   }
 
-  static async getDevicesByOwnerId(ownerId: string) {
-    const devices = await Device.find({ ownerId });
-
-    return devices;
+  async getDevicesByOwnerId(ownerId: string): Promise<IDevice[]> {
+    return await Device.find({ ownerId });
   }
 
-  static async getAllDevices() {
-    const devices = await Device.find().populate('ownerId', 'town');
-
-    return devices;
+  async getAllDevices(): Promise<IDevice[]> {
+    return await Device.find().populate('ownerId', 'town');
   }
 
-  static async updateDevice(
+  async updateDevice(
     id: string,
     updates: Partial<IDevice>,
     ownerId: string,
-  ) {
+  ): Promise<IDevice> {
     const updatedDevice = await Device.findByIdAndUpdate(id, updates, {
       new: true,
     });
@@ -77,7 +71,7 @@ export class DeviceService {
     return updatedDevice;
   }
 
-  static async deleteDevice(id: string, ownerId: string) {
+  async deleteDevice(id: string, ownerId: string): Promise<void> {
     const device = await Device.findById(id);
     if (!device) {
       throw new Error('NOT_FOUND');

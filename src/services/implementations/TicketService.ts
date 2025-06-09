@@ -1,14 +1,15 @@
-import Ticket from '../models/Ticket';
+import { ITicketService } from '../../interfaces/services/ITicketService';
+import Ticket from '../../models/Ticket';
 
-export class TicketService {
-  static async createTicket(userEmail: string, message: string) {
+export class TicketService implements ITicketService {
+  async createTicket(userEmail: string, message: string) {
     const ticket = new Ticket({ userEmail, message });
     await ticket.save();
 
     return ticket;
   }
 
-  static async getTicket(id: string) {
+  async getTicket(id: string) {
     const ticket = await Ticket.findById(id);
 
     if (!ticket) {
@@ -18,13 +19,11 @@ export class TicketService {
     return ticket;
   }
 
-  static async getAllTickets() {
-    const tickets = await Ticket.find();
-
-    return tickets;
+  async getAllTickets() {
+    return await Ticket.find();
   }
 
-  static async deleteTicket(id: string) {
+  async deleteTicket(id: string): Promise<void> {
     const deletedTicket = await Ticket.findByIdAndDelete(id);
 
     if (!deletedTicket) {

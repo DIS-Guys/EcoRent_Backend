@@ -1,7 +1,8 @@
-import PaymentCard from '../models/PaymentCard';
+import { IPaymentCardService } from '../../interfaces/services/IPaymentCardService';
+import PaymentCard from '../../models/PaymentCard';
 
-export class PaymentCardService {
-  static async createPaymentCard(
+export class PaymentCardService implements IPaymentCardService {
+  async createPaymentCard(
     cardNumber: string,
     expiryDate: number[],
     ownerName: string,
@@ -18,13 +19,11 @@ export class PaymentCardService {
     return paymentCard;
   }
 
-  static async getPaymentCardsByOwnerId(ownerId: string) {
-    const paymentCards = await PaymentCard.find({ ownerId });
-
-    return paymentCards;
+  async getPaymentCardsByOwnerId(ownerId: string) {
+    return await PaymentCard.find({ ownerId });
   }
 
-  static async deletePaymentCard(id: string, ownerId: string) {
+  async deletePaymentCard(id: string, ownerId: string): Promise<void> {
     const paymentCard = await PaymentCard.findById(id);
     if (!paymentCard) {
       throw new Error('NOT_FOUND');
