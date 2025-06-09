@@ -1,5 +1,5 @@
 import Ticket from '../../../src/models/Ticket';
-import { TicketService } from '../../../src/services/TicketService';
+import serviceManager from '../../../src/services';
 
 jest.mock('../../../src/models/Ticket');
 
@@ -21,7 +21,7 @@ describe('TicketService', () => {
         message: 'Hello',
       }));
 
-      const result = await TicketService.createTicket(
+      const result = await serviceManager.createTicket(
         'john_doe123@gmail.com',
         'Hello',
       );
@@ -41,7 +41,7 @@ describe('TicketService', () => {
       };
       (Ticket.findById as jest.Mock).mockResolvedValue(mockTicket);
 
-      const result = await TicketService.getTicket('ticket123');
+      const result = await serviceManager.getTicket('ticket123');
 
       expect(Ticket.findById).toHaveBeenCalledWith('ticket123');
       expect(result).toEqual(mockTicket);
@@ -50,7 +50,7 @@ describe('TicketService', () => {
     it('should throw an error if the ticket is not found', async () => {
       (Ticket.findById as jest.Mock).mockResolvedValue(null);
 
-      await expect(TicketService.getTicket('ticket123')).rejects.toThrow(
+      await expect(serviceManager.getTicket('ticket123')).rejects.toThrow(
         'NOT_FOUND',
       );
     });
@@ -74,7 +74,7 @@ describe('TicketService', () => {
       ];
       (Ticket.find as jest.Mock).mockResolvedValue(mockTickets);
 
-      const result = await TicketService.getAllTickets();
+      const result = await serviceManager.getAllTickets();
 
       expect(Ticket.find).toHaveBeenCalled();
       expect(result).toEqual(mockTickets);
@@ -90,7 +90,7 @@ describe('TicketService', () => {
       };
       (Ticket.findByIdAndDelete as jest.Mock).mockResolvedValue(mockTicket);
 
-      await TicketService.deleteTicket('ticket123');
+      await serviceManager.deleteTicket('ticket123');
 
       expect(Ticket.findByIdAndDelete).toHaveBeenCalledWith('ticket123');
     });
@@ -98,7 +98,7 @@ describe('TicketService', () => {
     it('should throw an error if ticket is not found', async () => {
       (Ticket.findByIdAndDelete as jest.Mock).mockResolvedValue(null);
 
-      await expect(TicketService.deleteTicket('ticket123')).rejects.toThrow(
+      await expect(serviceManager.deleteTicket('ticket123')).rejects.toThrow(
         'NOT_FOUND',
       );
     });

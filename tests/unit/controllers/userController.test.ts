@@ -8,14 +8,14 @@ import {
   changePassword,
   deleteUser,
 } from '../../../src/controllers/userController';
-import { UserService } from '../../../src/services/UserService';
+import serviceManager from '../../../src/services';
 
 const mockAuthenticateToken = jest.fn((req, res, next) => {
   const mockUser = { id: '123', name: 'Mock', surname: 'User' };
   req.user = mockUser;
   next();
 });
-jest.mock('../../../src/services/UserService');
+jest.mock('../../../src/services/');
 
 const app = express();
 app.use(express.json());
@@ -46,7 +46,7 @@ app.delete(
 describe('User Controller', () => {
   describe('POST /api/auth/register', () => {
     it('should register user successfully', async () => {
-      (UserService.createUser as jest.Mock).mockResolvedValueOnce(true);
+      (serviceManager.createUser as jest.Mock).mockResolvedValueOnce(true);
 
       const response = await request(app).post('/api/auth/register').send({
         name: 'Mock',
@@ -60,7 +60,7 @@ describe('User Controller', () => {
     });
 
     it('should return 400 if user already exists', async () => {
-      (UserService.createUser as jest.Mock).mockRejectedValueOnce(
+      (serviceManager.createUser as jest.Mock).mockRejectedValueOnce(
         new Error('BAD_REQUEST'),
       );
 
@@ -80,7 +80,7 @@ describe('User Controller', () => {
 
   describe('POST /api/auth/login', () => {
     it('should authenticate user and return token', async () => {
-      (UserService.authenticateUser as jest.Mock).mockResolvedValueOnce(
+      (serviceManager.authenticateUser as jest.Mock).mockResolvedValueOnce(
         'mock-token',
       );
 
@@ -95,7 +95,7 @@ describe('User Controller', () => {
     });
 
     it('should return 404 if user not found', async () => {
-      (UserService.authenticateUser as jest.Mock).mockRejectedValueOnce(
+      (serviceManager.authenticateUser as jest.Mock).mockRejectedValueOnce(
         new Error('NOT_FOUND'),
       );
 
@@ -111,7 +111,7 @@ describe('User Controller', () => {
 
   describe('GET /api/auth/getUser', () => {
     it('should return user data', async () => {
-      (UserService.getUser as jest.Mock).mockResolvedValueOnce({
+      (serviceManager.getUser as jest.Mock).mockResolvedValueOnce({
         id: '123',
         name: 'Mock',
         surname: 'User',
@@ -125,7 +125,7 @@ describe('User Controller', () => {
     });
 
     it('should return 404 if user not found', async () => {
-      (UserService.getUser as jest.Mock).mockRejectedValueOnce(
+      (serviceManager.getUser as jest.Mock).mockRejectedValueOnce(
         new Error('NOT_FOUND'),
       );
 
@@ -138,7 +138,7 @@ describe('User Controller', () => {
 
   describe('PUT /api/auth/updateUser', () => {
     it('should update user data', async () => {
-      (UserService.updateUser as jest.Mock).mockResolvedValueOnce({
+      (serviceManager.updateUser as jest.Mock).mockResolvedValueOnce({
         id: '123',
         name: 'Updated Name',
         surname: 'Updated Surname',
@@ -156,7 +156,7 @@ describe('User Controller', () => {
     });
 
     it('should return 404 if user not found', async () => {
-      (UserService.updateUser as jest.Mock).mockRejectedValueOnce(
+      (serviceManager.updateUser as jest.Mock).mockRejectedValueOnce(
         new Error('NOT_FOUND'),
       );
 
@@ -171,7 +171,7 @@ describe('User Controller', () => {
 
   describe('PUT /api/auth/updatePassword', () => {
     it('should change user password successfully', async () => {
-      (UserService.changePassword as jest.Mock).mockResolvedValueOnce(true);
+      (serviceManager.changePassword as jest.Mock).mockResolvedValueOnce(true);
 
       const response = await request(app).put('/api/auth/updatePassword').send({
         oldPassword: 'oldpassword123',
@@ -183,7 +183,7 @@ describe('User Controller', () => {
     });
 
     it('should return 400 if old password is incorrect', async () => {
-      (UserService.changePassword as jest.Mock).mockRejectedValueOnce(
+      (serviceManager.changePassword as jest.Mock).mockRejectedValueOnce(
         new Error('BAD_REQUEST'),
       );
 
@@ -199,7 +199,7 @@ describe('User Controller', () => {
 
   describe('DELETE /api/auth/deleteUser', () => {
     it('should delete user successfully', async () => {
-      (UserService.deleteUser as jest.Mock).mockResolvedValueOnce(true);
+      (serviceManager.deleteUser as jest.Mock).mockResolvedValueOnce(true);
 
       const response = await request(app).delete('/api/auth/deleteUser');
 
@@ -208,7 +208,7 @@ describe('User Controller', () => {
     });
 
     it('should return 404 if user not found', async () => {
-      (UserService.deleteUser as jest.Mock).mockRejectedValueOnce(
+      (serviceManager.deleteUser as jest.Mock).mockRejectedValueOnce(
         new Error('NOT_FOUND'),
       );
 

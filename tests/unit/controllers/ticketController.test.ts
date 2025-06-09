@@ -6,7 +6,7 @@ import {
   getAllTickets,
   deleteTicket,
 } from '../../../src/controllers/ticketController';
-import { TicketService } from '../../../src/services/TicketService';
+import serviceManager from '../../../src/services';
 
 const app = express();
 app.use(express.json());
@@ -16,7 +16,7 @@ app.get('/api/tickets/getTicket/:id', getTicket as RequestHandler);
 app.get('/api/tickets/getAllTickets', getAllTickets as RequestHandler);
 app.delete('/api/tickets/deleteTicket/:id', deleteTicket as RequestHandler);
 
-jest.mock('../../../src/services/TicketService');
+jest.mock('../../../src/services/');
 
 describe('Ticket Controller', () => {
   describe('POST /api/tickets/createTicket', () => {
@@ -26,7 +26,7 @@ describe('Ticket Controller', () => {
         userEmail: 'test@example.com',
         message: 'Test message',
       };
-      (TicketService.createTicket as jest.Mock).mockResolvedValue(mockTicket);
+      (serviceManager.createTicket as jest.Mock).mockResolvedValue(mockTicket);
 
       const res = await request(app)
         .post('/api/tickets/createTicket')
@@ -37,14 +37,14 @@ describe('Ticket Controller', () => {
         message: 'Тікет створено.',
         ticket: mockTicket,
       });
-      expect(TicketService.createTicket).toHaveBeenCalledWith(
+      expect(serviceManager.createTicket).toHaveBeenCalledWith(
         'test@example.com',
         'Test message',
       );
     });
 
     it('should return 500 if the service throws an error', async () => {
-      (TicketService.createTicket as jest.Mock).mockRejectedValue(
+      (serviceManager.createTicket as jest.Mock).mockRejectedValue(
         new Error('Service Error'),
       );
 
@@ -64,17 +64,17 @@ describe('Ticket Controller', () => {
         userEmail: 'test@example.com',
         message: 'Test message',
       };
-      (TicketService.getTicket as jest.Mock).mockResolvedValue(mockTicket);
+      (serviceManager.getTicket as jest.Mock).mockResolvedValue(mockTicket);
 
       const res = await request(app).get('/api/tickets/getTicket/1');
 
       expect(res.status).toBe(200);
       expect(res.body).toEqual(mockTicket);
-      expect(TicketService.getTicket).toHaveBeenCalledWith('1');
+      expect(serviceManager.getTicket).toHaveBeenCalledWith('1');
     });
 
     it('should return 404 if the ticket is not found', async () => {
-      (TicketService.getTicket as jest.Mock).mockRejectedValue(
+      (serviceManager.getTicket as jest.Mock).mockRejectedValue(
         new Error('NOT_FOUND'),
       );
 
@@ -85,7 +85,7 @@ describe('Ticket Controller', () => {
     });
 
     it('should return 500 for server errors', async () => {
-      (TicketService.getTicket as jest.Mock).mockRejectedValue(
+      (serviceManager.getTicket as jest.Mock).mockRejectedValue(
         new Error('Service Error'),
       );
 
@@ -102,17 +102,17 @@ describe('Ticket Controller', () => {
         { id: '1', userEmail: 'user1@example.com', message: 'Message 1' },
         { id: '2', userEmail: 'user2@example.com', message: 'Message 2' },
       ];
-      (TicketService.getAllTickets as jest.Mock).mockResolvedValue(mockTickets);
+      (serviceManager.getAllTickets as jest.Mock).mockResolvedValue(mockTickets);
 
       const res = await request(app).get('/api/tickets/getAllTickets');
 
       expect(res.status).toBe(200);
       expect(res.body).toEqual(mockTickets);
-      expect(TicketService.getAllTickets).toHaveBeenCalled();
+      expect(serviceManager.getAllTickets).toHaveBeenCalled();
     });
 
     it('should return 500 for server errors', async () => {
-      (TicketService.getAllTickets as jest.Mock).mockRejectedValue(
+      (serviceManager.getAllTickets as jest.Mock).mockRejectedValue(
         new Error('Service Error'),
       );
 
@@ -125,17 +125,17 @@ describe('Ticket Controller', () => {
 
   describe('DELETE /api/tickets/deleteTicket/:id', () => {
     it('should delete a ticket and return success message', async () => {
-      (TicketService.deleteTicket as jest.Mock).mockResolvedValue(undefined);
+      (serviceManager.deleteTicket as jest.Mock).mockResolvedValue(undefined);
 
       const res = await request(app).delete('/api/tickets/deleteTicket/1');
 
       expect(res.status).toBe(200);
       expect(res.body).toHaveProperty('message', 'Тікет успішно видалено.');
-      expect(TicketService.deleteTicket).toHaveBeenCalledWith('1');
+      expect(serviceManager.deleteTicket).toHaveBeenCalledWith('1');
     });
 
     it('should return 404 if the ticket is not found', async () => {
-      (TicketService.deleteTicket as jest.Mock).mockRejectedValue(
+      (serviceManager.deleteTicket as jest.Mock).mockRejectedValue(
         new Error('NOT_FOUND'),
       );
 
@@ -146,7 +146,7 @@ describe('Ticket Controller', () => {
     });
 
     it('should return 500 for server errors', async () => {
-      (TicketService.deleteTicket as jest.Mock).mockRejectedValue(
+      (serviceManager.deleteTicket as jest.Mock).mockRejectedValue(
         new Error('Service Error'),
       );
 

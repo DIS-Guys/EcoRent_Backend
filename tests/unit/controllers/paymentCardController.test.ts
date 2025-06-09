@@ -5,7 +5,7 @@ import {
   getPaymentCardsByOwnerId,
   deletePaymentCard,
 } from '../../../src/controllers/paymentCardController';
-import { PaymentCardService } from '../../../src/services/PaymentCardService';
+import serviceManager from '../../../src/services';
 
 const mockAuthenticateToken = jest.fn((req, res, next) => {
   const mockUser = { id: '123', name: 'Mock', surname: 'User' };
@@ -32,7 +32,7 @@ app.delete(
   deletePaymentCard as unknown as RequestHandler,
 );
 
-jest.mock('../../../src/services/PaymentCardService');
+jest.mock('../../../src/services/');
 
 describe('Payment Card Controller', () => {
   const mockUser = { id: 'user123', name: 'Test User' };
@@ -44,7 +44,7 @@ describe('Payment Card Controller', () => {
 
   describe('POST /api/paymentCards/addPaymentCard', () => {
     it('should create a payment card and return 201', async () => {
-      (PaymentCardService.createPaymentCard as jest.Mock).mockResolvedValue({
+      (serviceManager.createPaymentCard as jest.Mock).mockResolvedValue({
         id: 'card123',
         cardNumber: '1234567812345678',
         expiryDate: '12/25',
@@ -75,7 +75,7 @@ describe('Payment Card Controller', () => {
     });
 
     it('should return 500 on server error', async () => {
-      (PaymentCardService.createPaymentCard as jest.Mock).mockRejectedValue(
+      (serviceManager.createPaymentCard as jest.Mock).mockRejectedValue(
         new Error('Database error'),
       );
 
@@ -95,9 +95,7 @@ describe('Payment Card Controller', () => {
 
   describe('GET /api/paymentCards/getPaymentCardsByOwnerId', () => {
     it('should return payment cards for the user', async () => {
-      (
-        PaymentCardService.getPaymentCardsByOwnerId as jest.Mock
-      ).mockResolvedValue([
+      (serviceManager.getPaymentCardsByOwnerId as jest.Mock).mockResolvedValue([
         {
           id: 'card123',
           cardNumber: '1234567812345678',
@@ -124,9 +122,9 @@ describe('Payment Card Controller', () => {
     });
 
     it('should return 500 on server error', async () => {
-      (
-        PaymentCardService.getPaymentCardsByOwnerId as jest.Mock
-      ).mockRejectedValue(new Error('Database error'));
+      (serviceManager.getPaymentCardsByOwnerId as jest.Mock).mockRejectedValue(
+        new Error('Database error'),
+      );
 
       const response = await request(app)
         .get('/api/paymentCards/getPaymentCardsByOwnerId')
@@ -139,7 +137,7 @@ describe('Payment Card Controller', () => {
 
   describe('DELETE /api/paymentCards/deletePaymentCard/:id', () => {
     it('should delete a payment card and return 200', async () => {
-      (PaymentCardService.deletePaymentCard as jest.Mock).mockResolvedValue({
+      (serviceManager.deletePaymentCard as jest.Mock).mockResolvedValue({
         message: 'Платіжну картку успішно видалено.',
       });
 
@@ -154,7 +152,7 @@ describe('Payment Card Controller', () => {
     });
 
     it('should return 404 if card is not found', async () => {
-      (PaymentCardService.deletePaymentCard as jest.Mock).mockRejectedValue(
+      (serviceManager.deletePaymentCard as jest.Mock).mockRejectedValue(
         new Error('NOT_FOUND'),
       );
 
@@ -169,7 +167,7 @@ describe('Payment Card Controller', () => {
     });
 
     it('should return 403 if access is forbidden', async () => {
-      (PaymentCardService.deletePaymentCard as jest.Mock).mockRejectedValue(
+      (serviceManager.deletePaymentCard as jest.Mock).mockRejectedValue(
         new Error('FORBIDDEN'),
       );
 
@@ -184,7 +182,7 @@ describe('Payment Card Controller', () => {
     });
 
     it('should return 500 on server error', async () => {
-      (PaymentCardService.deletePaymentCard as jest.Mock).mockRejectedValue(
+      (serviceManager.deletePaymentCard as jest.Mock).mockRejectedValue(
         new Error('Database error'),
       );
 

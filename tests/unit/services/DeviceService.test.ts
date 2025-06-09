@@ -1,4 +1,4 @@
-import { DeviceService } from '../../../src/services/DeviceService';
+import serviceManager from '../../../src/services';
 import Device, { IDevice } from '../../../src/models/Device';
 import { deleteFromS3, uploadToS3 } from '../../../src/config/s3';
 import { parseFormData } from '../../../src/utils/parseFormData';
@@ -74,7 +74,7 @@ describe('DeviceService', () => {
         ownerId: mockUserId,
       });
 
-      const result = await DeviceService.createDevice(
+      const result = await serviceManager.createDevice(
         mockDeviceInfo,
         mockDeviceImages,
         mockUserId,
@@ -109,7 +109,7 @@ describe('DeviceService', () => {
         populate: jest.fn().mockResolvedValue(mockDevice),
       });
 
-      const result = await DeviceService.getDevice(mockDeviceId);
+      const result = await serviceManager.getDevice(mockDeviceId);
 
       expect(Device.findById).toHaveBeenCalledWith(mockDeviceId);
       expect(result).toEqual(mockDevice);
@@ -127,7 +127,7 @@ describe('DeviceService', () => {
 
       (Device.find as jest.Mock).mockResolvedValue(mockDevices);
 
-      const result = await DeviceService.getDevicesByOwnerId(mockOwnerId);
+      const result = await serviceManager.getDevicesByOwnerId(mockOwnerId);
 
       expect(Device.find).toHaveBeenCalledWith({ ownerId: mockOwnerId });
       expect(result).toEqual(mockDevices);
@@ -145,7 +145,7 @@ describe('DeviceService', () => {
         populate: jest.fn().mockResolvedValue(mockDevices),
       });
 
-      const result = await DeviceService.getAllDevices();
+      const result = await serviceManager.getAllDevices();
 
       expect(Device.find).toHaveBeenCalled();
       expect(result).toEqual(mockDevices);
@@ -168,7 +168,7 @@ describe('DeviceService', () => {
 
       (Device.findByIdAndUpdate as jest.Mock).mockResolvedValue(mockDevice);
 
-      const result = await DeviceService.updateDevice(
+      const result = await serviceManager.updateDevice(
         mockDeviceId,
         mockUpdates,
         mockOwnerId,
@@ -192,7 +192,7 @@ describe('DeviceService', () => {
       (Device.findByIdAndUpdate as jest.Mock).mockResolvedValue(mockDevice);
 
       await expect(
-        DeviceService.updateDevice(mockDeviceId, mockUpdates, wrongOwnerId),
+        serviceManager.updateDevice(mockDeviceId, mockUpdates, wrongOwnerId),
       ).rejects.toThrow('FORBIDDEN');
     });
 
@@ -200,7 +200,7 @@ describe('DeviceService', () => {
       (Device.findByIdAndUpdate as jest.Mock).mockResolvedValue(null);
 
       await expect(
-        DeviceService.updateDevice(mockDeviceId, mockUpdates, mockOwnerId),
+        serviceManager.updateDevice(mockDeviceId, mockUpdates, mockOwnerId),
       ).rejects.toThrow('NOT_FOUND');
     });
   });
@@ -217,7 +217,7 @@ describe('DeviceService', () => {
       (deleteFromS3 as jest.Mock).mockResolvedValue({});
       (Device.findByIdAndDelete as jest.Mock).mockResolvedValue({});
 
-      await DeviceService.deleteDevice(mockDeviceId, mockOwnerId);
+      await serviceManager.deleteDevice(mockDeviceId, mockOwnerId);
 
       expect(deleteFromS3).toHaveBeenCalledTimes(2);
       expect(Device.findByIdAndDelete).toHaveBeenCalledWith(mockDeviceId);
@@ -233,7 +233,7 @@ describe('DeviceService', () => {
       (Device.findById as jest.Mock).mockResolvedValue(mockDevice);
 
       await expect(
-        DeviceService.deleteDevice(mockDeviceId, wrongOwnerId),
+        serviceManager.deleteDevice(mockDeviceId, wrongOwnerId),
       ).rejects.toThrow('FORBIDDEN');
     });
 
@@ -241,7 +241,7 @@ describe('DeviceService', () => {
       (Device.findById as jest.Mock).mockResolvedValue(null);
 
       await expect(
-        DeviceService.deleteDevice(mockDeviceId, mockOwnerId),
+        serviceManager.deleteDevice(mockDeviceId, mockOwnerId),
       ).rejects.toThrow('NOT_FOUND');
     });
   });

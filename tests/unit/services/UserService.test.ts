@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt';
 import User from '../../../src/models/User';
 import Device from '../../../src/models/Device';
 import PaymentCard from '../../../src/models/PaymentCard';
-import { UserService } from '../../../src/services/UserService';
+import serviceManager from '../../../src/services';
 
 jest.mock('bcrypt');
 jest.mock('jsonwebtoken');
@@ -22,7 +22,7 @@ describe('UserService', () => {
       User.prototype.save = jest.fn().mockResolvedValue(true);
       (bcrypt.hash as jest.Mock).mockResolvedValue('hashed_password');
 
-      await UserService.createUser(
+      await serviceManager.createUser(
         'John',
         'Doe',
         'john@example.com',
@@ -40,7 +40,7 @@ describe('UserService', () => {
       });
 
       await expect(
-        UserService.createUser(
+        serviceManager.createUser(
           'John',
           'Doe',
           'john@example.com',
@@ -62,7 +62,7 @@ describe('UserService', () => {
       (bcrypt.compare as jest.Mock).mockResolvedValue(true);
       (jwt.sign as jest.Mock).mockReturnValue('token');
 
-      const token = await UserService.authenticateUser(
+      const token = await serviceManager.authenticateUser(
         'john@example.com',
         'password123',
       );
@@ -84,7 +84,7 @@ describe('UserService', () => {
       (User.findOne as jest.Mock).mockResolvedValue(null);
 
       await expect(
-        UserService.authenticateUser('john@example.com', 'password123'),
+        serviceManager.authenticateUser('john@example.com', 'password123'),
       ).rejects.toThrow('NOT_FOUND');
     });
 
@@ -94,7 +94,7 @@ describe('UserService', () => {
       (bcrypt.compare as jest.Mock).mockResolvedValue(false);
 
       await expect(
-        UserService.authenticateUser('john@example.com', 'wrongpassword'),
+        serviceManager.authenticateUser('john@example.com', 'wrongpassword'),
       ).rejects.toThrow('BAD_REQUEST');
     });
   });
@@ -104,7 +104,7 @@ describe('UserService', () => {
       const user = { _id: '123', name: 'John', surname: 'Doe' };
       (User.findById as jest.Mock).mockResolvedValue(user);
 
-      const result = await UserService.getUser('123');
+      const result = await serviceManager.getUser('123');
 
       expect(User.findById).toHaveBeenCalledWith('123');
       expect(result).toEqual(user);
@@ -113,7 +113,7 @@ describe('UserService', () => {
     it('should throw an error if user is not found', async () => {
       (User.findById as jest.Mock).mockResolvedValue(null);
 
-      await expect(UserService.getUser('123')).rejects.toThrow('NOT_FOUND');
+      await expect(serviceManager.getUser('123')).rejects.toThrow('NOT_FOUND');
     });
   });
 
@@ -122,7 +122,9 @@ describe('UserService', () => {
       const updatedUser = { _id: '123', name: 'John', surname: 'Smith' };
       (User.findByIdAndUpdate as jest.Mock).mockResolvedValue(updatedUser);
 
-      const result = await UserService.updateUser('123', { surname: 'Smith' });
+      const result = await serviceManager.updateUser('123', {
+        surname: 'Smith',
+      });
 
       expect(User.findByIdAndUpdate).toHaveBeenCalledWith(
         '123',
@@ -136,7 +138,7 @@ describe('UserService', () => {
       (User.findByIdAndUpdate as jest.Mock).mockResolvedValue(null);
 
       await expect(
-        UserService.updateUser('123', { surname: 'Smith' }),
+        serviceManager.updateUser('123', { surname: 'Smith' }),
       ).rejects.toThrow('NOT_FOUND');
     });
   });
@@ -148,7 +150,11 @@ describe('UserService', () => {
       (bcrypt.compare as jest.Mock).mockResolvedValue(true);
       (bcrypt.hash as jest.Mock).mockResolvedValue('new_hashed_password');
 
-      await UserService.changePassword('123', 'old_password', 'new_password');
+      await serviceManager.changePassword(
+        '123',
+        'old_password',
+        'new_password',
+      );
 
       expect(User.findById).toHaveBeenCalledWith('123');
       expect(bcrypt.compare).toHaveBeenCalledWith(
@@ -167,7 +173,7 @@ describe('UserService', () => {
       (bcrypt.compare as jest.Mock).mockResolvedValue(false);
 
       await expect(
-        UserService.changePassword('123', 'wrong_password', 'new_password'),
+        serviceManager.changePassword('123', 'wrong_password', 'new_password'),
       ).rejects.toThrow('BAD_REQUEST');
     });
 
@@ -175,7 +181,7 @@ describe('UserService', () => {
       (User.findById as jest.Mock).mockResolvedValue(null);
 
       await expect(
-        UserService.changePassword('123', 'old_password', 'new_password'),
+        serviceManager.changePassword('123', 'old_password', 'new_password'),
       ).rejects.toThrow('NOT_FOUND');
     });
   });
@@ -186,7 +192,7 @@ describe('UserService', () => {
       (Device.deleteMany as jest.Mock).mockResolvedValue(true);
       (PaymentCard.deleteMany as jest.Mock).mockResolvedValue(true);
 
-      await UserService.deleteUser('123');
+      await serviceManager.deleteUser('123');
 
       expect(User.findByIdAndDelete).toHaveBeenCalledWith('123');
       expect(Device.deleteMany).toHaveBeenCalledWith({ ownerId: '123' });
@@ -196,7 +202,9 @@ describe('UserService', () => {
     it('should throw an error if user is not found', async () => {
       (User.findByIdAndDelete as jest.Mock).mockResolvedValue(null);
 
-      await expect(UserService.deleteUser('123')).rejects.toThrow('NOT_FOUND');
+      await expect(serviceManager.deleteUser('123')).rejects.toThrow(
+        'NOT_FOUND',
+      );
     });
   });
 });

@@ -1,5 +1,5 @@
 import PaymentCard from '../../../src/models/PaymentCard';
-import { PaymentCardService } from '../../../src/services/PaymentCardService';
+import serviceManager from '../../../src/services';
 
 jest.mock('../../../src/models/PaymentCard');
 
@@ -25,7 +25,7 @@ describe('PaymentCardService', () => {
         ownerId: 'owner123',
       }));
 
-      const result = await PaymentCardService.createPaymentCard(
+      const result = await serviceManager.createPaymentCard(
         '1234567812345678',
         [12, 25],
         'John Doe',
@@ -53,7 +53,7 @@ describe('PaymentCardService', () => {
       (PaymentCard.find as jest.Mock).mockResolvedValue(mockCards);
 
       const result =
-        await PaymentCardService.getPaymentCardsByOwnerId('owner123');
+        await serviceManager.getPaymentCardsByOwnerId('owner123');
 
       expect(PaymentCard.find).toHaveBeenCalledWith({ ownerId: 'owner123' });
       expect(result).toEqual(mockCards);
@@ -66,7 +66,7 @@ describe('PaymentCardService', () => {
       (PaymentCard.findById as jest.Mock).mockResolvedValue(mockCard);
       (PaymentCard.findByIdAndDelete as jest.Mock).mockResolvedValue(true);
 
-      await PaymentCardService.deletePaymentCard('card123', 'owner123');
+      await serviceManager.deletePaymentCard('card123', 'owner123');
 
       expect(PaymentCard.findById).toHaveBeenCalledWith('card123');
       expect(PaymentCard.findByIdAndDelete).toHaveBeenCalledWith('card123');
@@ -76,7 +76,7 @@ describe('PaymentCardService', () => {
       (PaymentCard.findById as jest.Mock).mockResolvedValue(null);
 
       await expect(
-        PaymentCardService.deletePaymentCard('card123', 'owner123'),
+        serviceManager.deletePaymentCard('card123', 'owner123'),
       ).rejects.toThrow('NOT_FOUND');
     });
 
@@ -85,7 +85,7 @@ describe('PaymentCardService', () => {
       (PaymentCard.findById as jest.Mock).mockResolvedValue(mockCard);
 
       await expect(
-        PaymentCardService.deletePaymentCard('card123', 'owner123'),
+        serviceManager.deletePaymentCard('card123', 'owner123'),
       ).rejects.toThrow('FORBIDDEN');
     });
   });

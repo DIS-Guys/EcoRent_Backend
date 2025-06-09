@@ -8,14 +8,14 @@ import {
   updateDevice,
   deleteDevice,
 } from '../../../src/controllers/deviceController';
-import { DeviceService } from '../../../src/services/DeviceService';
+import serviceManager from '../../../src/services';
 
 const mockAuthenticateToken = jest.fn((req, res, next) => {
   const mockUser = { id: '123', name: 'Mock', surname: 'User' };
   req.user = mockUser;
   next();
 });
-jest.mock('../../../src/services/DeviceService');
+jest.mock('../../../src/services/');
 jest.mock('../../../src/config/s3.ts', () => ({
   uploadToS3: jest.fn(),
   deleteFromS3: jest.fn(),
@@ -50,7 +50,7 @@ app.delete(
 describe('Device Controller', () => {
   describe('POST /api/devices/addDevice', () => {
     it('should add a device successfully', async () => {
-      (DeviceService.createDevice as jest.Mock).mockResolvedValueOnce({
+      (serviceManager.createDevice as jest.Mock).mockResolvedValueOnce({
         id: '1',
         name: 'Device 1',
         ownerId: '123',
@@ -66,7 +66,7 @@ describe('Device Controller', () => {
     });
 
     it('should return 500 on server error', async () => {
-      (DeviceService.createDevice as jest.Mock).mockRejectedValueOnce(
+      (serviceManager.createDevice as jest.Mock).mockRejectedValueOnce(
         new Error('Server Error'),
       );
 
@@ -81,7 +81,7 @@ describe('Device Controller', () => {
 
   describe('GET /api/devices/getDevice/:id', () => {
     it('should return a device by ID', async () => {
-      (DeviceService.getDevice as jest.Mock).mockResolvedValueOnce({
+      (serviceManager.getDevice as jest.Mock).mockResolvedValueOnce({
         id: '1',
         name: 'Device 1',
       });
@@ -93,7 +93,7 @@ describe('Device Controller', () => {
     });
 
     it('should return 500 on server error', async () => {
-      (DeviceService.getDevice as jest.Mock).mockRejectedValueOnce(
+      (serviceManager.getDevice as jest.Mock).mockRejectedValueOnce(
         new Error('Server Error'),
       );
 
@@ -106,7 +106,7 @@ describe('Device Controller', () => {
 
   describe('GET /api/devices/getOwnerDevices', () => {
     it('should return devices by owner ID', async () => {
-      (DeviceService.getDevicesByOwnerId as jest.Mock).mockResolvedValueOnce([
+      (serviceManager.getDevicesByOwnerId as jest.Mock).mockResolvedValueOnce([
         { id: '1', name: 'Device 1' },
       ]);
 
@@ -117,7 +117,7 @@ describe('Device Controller', () => {
     });
 
     it('should return 500 on server error', async () => {
-      (DeviceService.getDevicesByOwnerId as jest.Mock).mockRejectedValueOnce(
+      (serviceManager.getDevicesByOwnerId as jest.Mock).mockRejectedValueOnce(
         new Error('Server Error'),
       );
 
@@ -130,7 +130,7 @@ describe('Device Controller', () => {
 
   describe('PUT /api/devices/updateDevice/:id', () => {
     it('should update a device successfully', async () => {
-      (DeviceService.updateDevice as jest.Mock).mockResolvedValueOnce({
+      (serviceManager.updateDevice as jest.Mock).mockResolvedValueOnce({
         id: '1',
         name: 'Updated Device',
       });
@@ -145,7 +145,7 @@ describe('Device Controller', () => {
     });
 
     it('should return 404 if device not found', async () => {
-      (DeviceService.updateDevice as jest.Mock).mockRejectedValueOnce(
+      (serviceManager.updateDevice as jest.Mock).mockRejectedValueOnce(
         new Error('NOT_FOUND'),
       );
 
@@ -160,7 +160,7 @@ describe('Device Controller', () => {
 
   describe('DELETE /api/devices/deleteDevice/:id', () => {
     it('should delete a device successfully', async () => {
-      (DeviceService.deleteDevice as jest.Mock).mockResolvedValueOnce(true);
+      (serviceManager.deleteDevice as jest.Mock).mockResolvedValueOnce(true);
 
       const response = await request(app).delete('/api/devices/deleteDevice/1');
 
@@ -169,7 +169,7 @@ describe('Device Controller', () => {
     });
 
     it('should return 404 if device not found', async () => {
-      (DeviceService.deleteDevice as jest.Mock).mockRejectedValueOnce(
+      (serviceManager.deleteDevice as jest.Mock).mockRejectedValueOnce(
         new Error('NOT_FOUND'),
       );
 
