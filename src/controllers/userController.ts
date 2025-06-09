@@ -1,12 +1,12 @@
 import { Request, Response } from 'express';
 import { AuthenticatedRequest } from '../interfaces/request.interface';
-import { UserService } from '../services/UserService';
+import serviceManager from '../services';
 
 export const createUser = async (req: Request, res: Response) => {
   const { name, surname, email, password } = req.body;
 
   try {
-    await UserService.createUser(name, surname, email, password);
+    await serviceManager.createUser(name, surname, email, password);
 
     res.status(201).json({ message: 'Користувача зареєстровано успішно.' });
   } catch (error) {
@@ -23,7 +23,7 @@ export const authenticateUser = async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
   try {
-    const token = await UserService.authenticateUser(email, password);
+    const token = await serviceManager.authenticateUser(email, password);
 
     res.json({ token, message: 'Успішний вхід.' });
   } catch (error) {
@@ -41,7 +41,7 @@ export const getUser = async (req: AuthenticatedRequest, res: Response) => {
   const id = req.user.id;
 
   try {
-    const user = await UserService.getUser(id);
+    const user = await serviceManager.getUser(id);
 
     res.status(200).json(user);
   } catch (error) {
@@ -57,7 +57,7 @@ export const updateUser = async (req: AuthenticatedRequest, res: Response) => {
   const updates = req.body;
 
   try {
-    const updatedUser = await UserService.updateUser(id, updates);
+    const updatedUser = await serviceManager.updateUser(id, updates);
 
     res
       .status(200)
@@ -78,7 +78,7 @@ export const changePassword = async (
   const { oldPassword, newPassword } = req.body;
 
   try {
-    await UserService.changePassword(id, oldPassword, newPassword);
+    await serviceManager.changePassword(id, oldPassword, newPassword);
 
     res.status(200).json({ message: 'Успішна зміна паролю.' });
   } catch (error) {
@@ -96,7 +96,7 @@ export const deleteUser = async (req: AuthenticatedRequest, res: Response) => {
   const id = req.user.id;
 
   try {
-    await UserService.deleteUser(id);
+    await serviceManager.deleteUser(id);
 
     res.status(200).json({ message: 'Користувача видалено успішно.' });
   } catch (error) {

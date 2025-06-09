@@ -1,14 +1,14 @@
 import { Request, Response } from 'express';
 import { DeviceData } from '../interfaces/device.interface';
 import { AuthenticatedRequest } from '../interfaces/request.interface';
-import { DeviceService } from '../services/DeviceService';
+import serviceManager from '../services';
 
 export const addDevice = async (req: AuthenticatedRequest, res: Response) => {
   const deviceInfo = req.body as DeviceData;
   const deviceImages = req.files as Express.Multer.File[];
 
   try {
-    const device = await DeviceService.createDevice(
+    const device = await serviceManager.createDevice(
       deviceInfo,
       deviceImages,
       req.user.id,
@@ -24,7 +24,7 @@ export const getDevice = async (req: Request, res: Response) => {
   const { id } = req.params;
 
   try {
-    const device = await DeviceService.getDevice(id);
+    const device = await serviceManager.getDevice(id);
 
     res.status(200).json(device);
   } catch (error) {
@@ -39,7 +39,7 @@ export const getDevicesByOwnerId = async (
   const ownerId = req.user.id;
 
   try {
-    const devices = await DeviceService.getDevicesByOwnerId(ownerId);
+    const devices = await serviceManager.getDevicesByOwnerId(ownerId);
 
     res.status(200).json(devices);
   } catch (error) {
@@ -49,7 +49,7 @@ export const getDevicesByOwnerId = async (
 
 export const getAllDevices = async (req: Request, res: Response) => {
   try {
-    const devices = await DeviceService.getAllDevices();
+    const devices = await serviceManager.getAllDevices();
 
     res.status(200).json(devices);
   } catch (error) {
@@ -66,7 +66,7 @@ export const updateDevice = async (
   const ownerId = req.user.id;
 
   try {
-    const updatedDevice = await DeviceService.updateDevice(
+    const updatedDevice = await serviceManager.updateDevice(
       id,
       updates,
       ownerId,
@@ -92,7 +92,7 @@ export const deleteDevice = async (
   const ownerId = req.user.id;
 
   try {
-    await DeviceService.deleteDevice(id, ownerId);
+    await serviceManager.deleteDevice(id, ownerId);
 
     res.status(200).json({ message: 'Пристрій успішно видалено.' });
   } catch (error) {
