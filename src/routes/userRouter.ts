@@ -8,11 +8,26 @@ import {
   changePassword,
 } from '../controllers/userController';
 import { authenticateToken } from '../middlewares/authMiddleware';
+import { validate } from '../middlewares/validate';
+import {
+  registerSchema,
+  loginSchema,
+  updateUserSchema,
+  changePasswordSchema,
+} from '../validations/userValidation';
 
 const router = express.Router();
 
-router.post('/register', createUser as express.RequestHandler);
-router.post('/login', authenticateUser as express.RequestHandler);
+router.post(
+  '/register',
+  validate(registerSchema),
+  createUser as express.RequestHandler,
+);
+router.post(
+  '/login',
+  validate(loginSchema),
+  authenticateUser as express.RequestHandler,
+);
 router.get(
   '/getUser',
   authenticateToken as express.RequestHandler,
@@ -21,6 +36,7 @@ router.get(
 router.put(
   '/updateUser',
   authenticateToken as express.RequestHandler,
+  validate(updateUserSchema) as express.RequestHandler,
   updateUser as unknown as express.RequestHandler,
 );
 router.delete(
@@ -31,6 +47,7 @@ router.delete(
 router.put(
   '/updatePassword',
   authenticateToken as express.RequestHandler,
+  validate(changePasswordSchema) as express.RequestHandler,
   changePassword as unknown as express.RequestHandler,
 );
 

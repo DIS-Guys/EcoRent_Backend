@@ -19,7 +19,8 @@ export const addPaymentCard = async (
 
     res.status(201).json({ message: 'Платіжна картка додана.', paymentCard });
   } catch (error) {
-    res.status(500).json({ message: 'Помилка сервера.', error });
+    console.error('addPaymentCard error:', error);
+    res.status(500).json({ message: 'Помилка сервера.' });
   }
 };
 
@@ -35,7 +36,8 @@ export const getPaymentCardsByOwnerId = async (
 
     res.status(200).json(paymentCards);
   } catch (error) {
-    res.status(500).json({ message: 'Помилка сервера.', error });
+    console.error('getPaymentCardsByOwnerId error:', error);
+    res.status(500).json({ message: 'Помилка сервера.' });
   }
 };
 
@@ -43,7 +45,7 @@ export const deletePaymentCard = async (
   req: AuthenticatedRequest,
   res: Response,
 ) => {
-  const { id } = req.params;
+  const id = req.params.id as string;
   const ownerId = req.user.id;
 
   try {
@@ -59,6 +61,7 @@ export const deletePaymentCard = async (
     if (error instanceof Error && error.message === 'FORBIDDEN') {
       return res.status(403).json({ message: 'Відмовлено у доступі.' });
     }
-    res.status(500).json({ message: 'Помилка сервера.', error });
+    console.error('deletePaymentCard error:', error);
+    res.status(500).json({ message: 'Помилка сервера.' });
   }
 };

@@ -15,7 +15,8 @@ export const createUser = async (req: Request, res: Response) => {
         .status(400)
         .json({ message: 'Користувач із таким email вже існує.' });
     }
-    res.status(500).json({ message: 'Помилка сервера.', error });
+    console.error('createUser error:', error);
+    res.status(500).json({ message: 'Помилка сервера.' });
   }
 };
 
@@ -33,7 +34,8 @@ export const authenticateUser = async (req: Request, res: Response) => {
     if (error instanceof Error && error.message === 'BAD_REQUEST') {
       return res.status(400).json({ message: 'Невірний пароль.' });
     }
-    res.status(500).json({ message: 'Помилка сервера.', error });
+    console.error('authenticateUser error:', error);
+    res.status(500).json({ message: 'Помилка сервера.' });
   }
 };
 
@@ -48,7 +50,8 @@ export const getUser = async (req: AuthenticatedRequest, res: Response) => {
     if (error instanceof Error && error.message === 'NOT_FOUND') {
       return res.status(404).json({ message: 'Користувача не знайдено.' });
     }
-    res.status(500).json({ message: 'Помилка сервера.', error });
+    console.error('getUser error:', error);
+    res.status(500).json({ message: 'Помилка сервера.' });
   }
 };
 
@@ -66,7 +69,8 @@ export const updateUser = async (req: AuthenticatedRequest, res: Response) => {
     if (error instanceof Error && error.message === 'NOT_FOUND') {
       return res.status(404).json({ message: 'Користувача не знайдено.' });
     }
-    res.status(500).json({ message: 'Помилка сервера.', error });
+    console.error('updateUser error:', error);
+    res.status(500).json({ message: 'Помилка сервера.' });
   }
 };
 
@@ -88,7 +92,8 @@ export const changePassword = async (
     if (error instanceof Error && error.message === 'BAD_REQUEST') {
       return res.status(400).json({ message: 'Старий пароль невірний.' });
     }
-    res.status(500).json({ message: 'Помилка сервера.', error });
+    console.error('changePassword error:', error);
+    res.status(500).json({ message: 'Помилка сервера.' });
   }
 };
 
@@ -103,6 +108,7 @@ export const deleteUser = async (req: AuthenticatedRequest, res: Response) => {
     if (error instanceof Error && error.message === 'NOT_FOUND') {
       return res.status(404).json({ message: 'Користувача не знайдено.' });
     }
-    res.status(500).json({ message: 'Помилка сервера.', error });
+    console.error('deleteUser error:', error);
+    res.status(500).json({ message: 'Помилка сервера.' });
   }
 };

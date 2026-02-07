@@ -16,19 +16,21 @@ export const addDevice = async (req: AuthenticatedRequest, res: Response) => {
 
     res.status(201).json({ message: 'Пристрій додано.', device });
   } catch (error) {
-    res.status(500).json({ message: 'Помилка сервера.', error });
+    console.error('addDevice error:', error);
+    res.status(500).json({ message: 'Помилка сервера.' });
   }
 };
 
 export const getDevice = async (req: Request, res: Response) => {
-  const { id } = req.params;
+  const id = req.params.id as string;
 
   try {
     const device = await DeviceService.getDevice(id);
 
     res.status(200).json(device);
   } catch (error) {
-    res.status(500).json({ message: 'Помилка сервера.', error });
+    console.error('getDevice error:', error);
+    res.status(500).json({ message: 'Помилка сервера.' });
   }
 };
 
@@ -43,7 +45,8 @@ export const getDevicesByOwnerId = async (
 
     res.status(200).json(devices);
   } catch (error) {
-    res.status(500).json({ message: 'Помилка сервера.', error });
+    console.error('getDevicesByOwnerId error:', error);
+    res.status(500).json({ message: 'Помилка сервера.' });
   }
 };
 
@@ -53,7 +56,8 @@ export const getAllDevices = async (req: Request, res: Response) => {
 
     res.status(200).json(devices);
   } catch (error) {
-    res.status(500).json({ message: 'Помилка сервера.', error });
+    console.error('getAllDevices error:', error);
+    res.status(500).json({ message: 'Помилка сервера.' });
   }
 };
 
@@ -61,7 +65,7 @@ export const updateDevice = async (
   req: AuthenticatedRequest,
   res: Response,
 ) => {
-  const { id } = req.params;
+  const id = req.params.id as string;
   const updates = req.body;
   const ownerId = req.user.id;
 
@@ -80,7 +84,8 @@ export const updateDevice = async (
     if (error instanceof Error && error.message === 'FORBIDDEN') {
       return res.status(403).json({ message: 'Відмовлено у доступі.' });
     }
-    res.status(500).json({ message: 'Помилка сервера.', error });
+    console.error('updateDevice error:', error);
+    res.status(500).json({ message: 'Помилка сервера.' });
   }
 };
 
@@ -88,7 +93,7 @@ export const deleteDevice = async (
   req: AuthenticatedRequest,
   res: Response,
 ) => {
-  const { id } = req.params;
+  const id = req.params.id as string;
   const ownerId = req.user.id;
 
   try {
@@ -102,6 +107,7 @@ export const deleteDevice = async (
     if (error instanceof Error && error.message === 'FORBIDDEN') {
       return res.status(403).json({ message: 'Відмовлено у доступі.' });
     }
-    res.status(500).json({ message: 'Помилка сервера.', error });
+    console.error('deleteDevice error:', error);
+    res.status(500).json({ message: 'Помилка сервера.' });
   }
 };

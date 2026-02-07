@@ -9,12 +9,13 @@ export const createTicket = async (req: Request, res: Response) => {
 
     res.status(201).json({ message: 'Тікет створено.', ticket });
   } catch (error) {
-    res.status(500).json({ message: 'Помилка сервера.', error });
+    console.error('createTicket error:', error);
+    res.status(500).json({ message: 'Помилка сервера.' });
   }
 };
 
 export const getTicket = async (req: Request, res: Response) => {
-  const { id } = req.params;
+  const id = req.params.id as string;
 
   try {
     const ticket = await TicketService.getTicket(id);
@@ -24,7 +25,8 @@ export const getTicket = async (req: Request, res: Response) => {
     if (error instanceof Error && error.message === 'NOT_FOUND') {
       return res.status(404).json({ message: 'Тікет не знайдено.' });
     }
-    res.status(500).json({ message: 'Помилка сервера.', error });
+    console.error('getTicket error:', error);
+    res.status(500).json({ message: 'Помилка сервера.' });
   }
 };
 
@@ -34,12 +36,13 @@ export const getAllTickets = async (req: Request, res: Response) => {
 
     res.status(200).json(tickets);
   } catch (error) {
-    res.status(500).json({ message: 'Помилка сервера.', error });
+    console.error('getAllTickets error:', error);
+    res.status(500).json({ message: 'Помилка сервера.' });
   }
 };
 
 export const deleteTicket = async (req: Request, res: Response) => {
-  const { id } = req.params;
+  const id = req.params.id as string;
 
   try {
     await TicketService.deleteTicket(id);
@@ -49,6 +52,7 @@ export const deleteTicket = async (req: Request, res: Response) => {
     if (error instanceof Error && error.message === 'NOT_FOUND') {
       return res.status(404).json({ message: 'Тікет не знайдено.' });
     }
-    res.status(500).json({ message: 'Помилка сервера.', error });
+    console.error('deleteTicket error:', error);
+    res.status(500).json({ message: 'Помилка сервера.' });
   }
 };

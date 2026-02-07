@@ -1,0 +1,38 @@
+import { z } from 'zod';
+
+export const registerSchema = z.object({
+  name: z.string().min(1, "Ім'я є обов'язковим.").max(50),
+  surname: z.string().min(1, "Прізвище є обов'язковим.").max(50),
+  email: z.email('Невірний формат email.'),
+  password: z
+    .string()
+    .min(6, 'Пароль має містити щонайменше 6 символів.')
+    .max(128),
+});
+
+export const loginSchema = z.object({
+  email: z.email('Невірний формат email.'),
+  password: z.string().min(1, "Пароль є обов'язковим."),
+});
+
+export const updateUserSchema = z
+  .object({
+    name: z.string().min(1).max(50).optional(),
+    surname: z.string().min(1).max(50).optional(),
+    phoneNumber: z.string().max(20).optional(),
+    region: z.string().max(100).optional(),
+    town: z.string().max(100).optional(),
+    street: z.string().max(200).optional(),
+    houseNumber: z.number().int().positive().optional(),
+    apartmentNumber: z.number().int().positive().optional(),
+    floorNumber: z.number().int().optional(),
+  })
+  .strict();
+
+export const changePasswordSchema = z.object({
+  oldPassword: z.string().min(1, "Старий пароль є обов'язковим."),
+  newPassword: z
+    .string()
+    .min(6, 'Новий пароль має містити щонайменше 6 символів.')
+    .max(128),
+});
