@@ -2,6 +2,8 @@ node_modules
 dist
 .vscode/*
 !.vscode/extensions.json
+.cursor/*
+!.cursor/extensions.json
 .idea
 .env
 coverage
