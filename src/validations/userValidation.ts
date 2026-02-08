@@ -7,7 +7,11 @@ export const registerSchema = z.object({
   password: z
     .string()
     .min(6, 'Password must contain at least 6 characters.')
-    .max(128),
+    .max(128)
+    .regex(
+      /^(?=.*[a-zA-Z])(?=.*\d).*$/,
+      'Password must contain at least one letter and one digit.',
+    ),
 });
 
 export const loginSchema = z.object({
@@ -34,5 +38,9 @@ export const changePasswordSchema = z.object({
   newPassword: z
     .string()
     .min(6, 'New password must contain at least 6 characters.')
-    .max(128),
+    .max(128)
+    .regex(
+      /^(?=.*[a-zA-Z])(?=.*\d).*$/,
+      'Password must contain at least one letter and one digit.',
+    ),
 });
