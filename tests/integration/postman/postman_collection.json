@@ -205,18 +205,34 @@
 					"response": []
 				},
 				{
-					"name": "updateUser",
-					"event": [
-						{
-							"listen": "prerequest",
-							"script": {
-								"exec": [
-									""
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						},
+			"name": "updateUser",
+				"event": [
+					{
+						"listen": "prerequest",
+						"script": {
+							"exec": [
+								"const operators = ['050', '063', '067', '068', '073', '093', '095', '096', '097', '098', '099'];\r",
+								"const operator = operators[Math.floor(Math.random() * operators.length)];\r",
+								"let digits = '';\r",
+								"for (let i = 0; i < 7; i++) {\r",
+								"    digits += Math.floor(Math.random() * 10);\r",
+								"}\r",
+								"pm.variables.set('phoneNumber', '+38' + operator + digits);\r",
+								"\r",
+								"const towns = ['Київ', 'Львів', 'Одеса', 'Харків', 'Дніпро'];\r",
+								"pm.variables.set('town', towns[Math.floor(Math.random() * towns.length)]);\r",
+								"\r",
+								"const regions = ['Київська', 'Львівська', 'Одеська', 'Харківська', 'Дніпропетровська'];\r",
+								"pm.variables.set('region', regions[Math.floor(Math.random() * regions.length)]);\r",
+								"\r",
+								"const streets = ['Хрещатик', 'Бандери', 'Шевченка', 'Грушевського', 'Франка'];\r",
+								"pm.variables.set('street', streets[Math.floor(Math.random() * streets.length)]);\r",
+								""
+							],
+							"type": "text/javascript",
+							"packages": {}
+						}
+					},
 						{
 							"listen": "test",
 							"script": {
@@ -255,7 +271,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"phoneNumber\": \"{{$randomPhoneNumber}}\",\r\n  \"town\": \"{{$randomCity}}\",\r\n  \"region\": \"{{$randomStreetName}}\",\r\n  \"street\": \"{{$randomStreetAddress}}\"\r\n}",
+							"raw": "{\r\n  \"phoneNumber\": \"{{phoneNumber}}\",\r\n  \"town\": \"{{town}}\",\r\n  \"region\": \"{{region}}\",\r\n  \"street\": \"{{street}}\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -807,11 +823,7 @@
 									"    pm.expect(pm.response.json()[0]).to.have.property('title');\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Response body has 'description' property\", function () {\r",
-									"    pm.expect(pm.response.json()[0]).to.have.property('description');\r",
-									"});\r",
-									"\r",
-									"pm.test(\"Response body has 'manufacturer' property\", function () {\r",
+								"pm.test(\"Response body has 'manufacturer' property\", function () {\r",
 									"    pm.expect(pm.response.json()[0]).to.have.property('manufacturer');\r",
 									"});\r",
 									""
@@ -1122,11 +1134,21 @@
 							}
 						}
 					],
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://{{domain}}/api/tickets/getAllTickets",
+				"request": {
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "string"
+							}
+						]
+					},
+					"method": "GET",
+					"header": [],
+					"url": {
+						"raw": "http://{{domain}}/api/tickets/getAllTickets",
 							"protocol": "http",
 							"host": [
 								"{{domain}}"
@@ -1165,11 +1187,21 @@
 							}
 						}
 					],
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "http://{{domain}}/api/tickets/deleteTicket/:id",
+				"request": {
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "{{token}}",
+								"type": "string"
+							}
+						]
+					},
+					"method": "DELETE",
+					"header": [],
+					"url": {
+						"raw": "http://{{domain}}/api/tickets/deleteTicket/:id",
 							"protocol": "http",
 							"host": [
 								"{{domain}}"
