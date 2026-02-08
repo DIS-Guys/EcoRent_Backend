@@ -16,5 +16,6 @@ export const validate =
       });
     }
 
+    req[source] = result.data;
     next();
   };

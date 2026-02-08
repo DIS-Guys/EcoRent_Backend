@@ -23,10 +23,41 @@ export const updateUserSchema = z
   .object({
     name: z.string().min(1).max(50).optional(),
     surname: z.string().min(1).max(50).optional(),
-    phoneNumber: z.string().max(20).optional(),
-    region: z.string().max(100).optional(),
-    town: z.string().max(100).optional(),
-    street: z.string().max(200).optional(),
+    email: z.email('Invalid email format.').optional(),
+    phoneNumber: z
+      .string()
+      .max(20)
+      .refine(
+        (val) => {
+          if (!val) return true;
+          return /^(((\+?38)[-\s(.]?\d{3}[-\s).]?)|([.(]?0\d{2}[.)]?))?[-\s.]?\d{3}[-\s.]?\d{2}[-\s.]?\d{2}$/.test(
+            val,
+          );
+        },
+        { message: 'Invalid phone number format.' },
+      )
+      .optional(),
+    region: z
+      .string()
+      .max(100)
+      .refine((val) => !val || !/\d/.test(val), {
+        message: 'Region must not contain digits.',
+      })
+      .optional(),
+    town: z
+      .string()
+      .max(100)
+      .refine((val) => !val || !/^\d/.test(val), {
+        message: 'Town must not start with a digit.',
+      })
+      .optional(),
+    street: z
+      .string()
+      .max(200)
+      .refine((val) => !val || !/^\d/.test(val), {
+        message: 'Street must not start with a digit.',
+      })
+      .optional(),
     houseNumber: z.number().int().positive().optional(),
     apartmentNumber: z.number().int().positive().optional(),
     floorNumber: z.number().int().optional(),

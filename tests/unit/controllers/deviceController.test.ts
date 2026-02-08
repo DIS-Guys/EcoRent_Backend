@@ -20,6 +20,22 @@ jest.mock('../../../src/config/s3.ts', () => ({
   uploadToS3: jest.fn(),
   deleteFromS3: jest.fn(),
 }));
+jest.mock('../../../src/validations/deviceValidation', () => ({
+  addDeviceSchema: {
+    safeParse: jest.fn().mockReturnValue({ success: true, data: {} }),
+  },
+}));
+jest.mock('../../../src/utils/parseFormData', () => ({
+  parseFormData: jest.fn().mockReturnValue({}),
+}));
+
+let mockDeviceImages: Partial<Express.Multer.File>[] | undefined;
+
+const mockMulter: RequestHandler = (req, _res, next) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (req as Record<string, any>).files = mockDeviceImages;
+  next();
+};
 
 const app = express();
 app.use(express.json());
@@ -27,6 +43,7 @@ app.use(express.json());
 app.post(
   '/api/devices/addDevice',
   mockAuthenticateToken,
+  mockMulter,
   addDevice as unknown as RequestHandler,
 );
 app.get('/api/devices/getDevice/:id', getDevice as unknown as RequestHandler);
@@ -52,6 +69,19 @@ describe('Device Controller', () => {
     jest.spyOn(console, 'error').mockImplementation(() => {});
   });
 
+  beforeEach(() => {
+    jest.clearAllMocks();
+    mockDeviceImages = [
+      {
+        fieldname: 'images',
+        originalname: 'test.jpg',
+        mimetype: 'image/jpeg',
+        buffer: Buffer.from('test'),
+        size: 4,
+      },
+    ];
+  });
+
   afterAll(() => {
     (console.error as jest.Mock).mockRestore();
   });
@@ -71,6 +101,18 @@ describe('Device Controller', () => {
       expect(response.status).toBe(201);
       expect(response.body.message).toBe('Device added.');
       expect(response.body.device.name).toBe('Device 1');
+    });
+
+    it('should return 400 when no images provided', async () => {
+      mockDeviceImages = [];
+
+      const response = await request(app)
+        .post('/api/devices/addDevice')
+        .send({ name: 'Device 1', description: 'Test Device' });
+
+      expect(response.status).toBe(400);
+      expect(response.body.message).toBe('Validation error.');
+      expect(response.body.errors[0].field).toBe('images');
     });
 
     it('should return 500 on server error', async () => {

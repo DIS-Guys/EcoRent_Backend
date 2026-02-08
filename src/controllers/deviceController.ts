@@ -2,14 +2,36 @@ import { Request, Response } from 'express';
 import { DeviceData } from '../interfaces/device.interface';
 import { AuthenticatedRequest } from '../interfaces/request.interface';
 import { DeviceService } from '../services/DeviceService';
+import { parseFormData } from '../utils/parseFormData';
+import { addDeviceSchema } from '../validations/deviceValidation';
 
 export const addDevice = async (req: AuthenticatedRequest, res: Response) => {
-  const deviceInfo = req.body as DeviceData;
   const deviceImages = req.files as Express.Multer.File[];
+
+  if (!deviceImages || deviceImages.length === 0) {
+    return res.status(400).json({
+      message: 'Validation error.',
+      errors: [{ field: 'images', message: 'At least one image is required.' }],
+    });
+  }
+
+  const parsedData = parseFormData(req.body as DeviceData);
+
+  const result = addDeviceSchema.safeParse(parsedData);
+
+  if (!result.success) {
+    return res.status(400).json({
+      message: 'Validation error.',
+      errors: result.error.issues.map((issue) => ({
+        field: issue.path.join('.'),
+        message: issue.message,
+      })),
+    });
+  }
 
   try {
     const device = await DeviceService.createDevice(
-      deviceInfo,
+      parsedData,
       deviceImages,
       req.user.id,
     );

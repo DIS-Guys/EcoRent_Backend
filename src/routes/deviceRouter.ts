@@ -12,6 +12,7 @@ import {
 import { authenticateToken } from '../middlewares/authMiddleware';
 import { validate } from '../middlewares/validate';
 import { objectIdParamSchema } from '../validations/commonValidation';
+import { updateDeviceSchema } from '../validations/deviceValidation';
 
 const router = express.Router();
 const upload = multer({
@@ -47,6 +48,7 @@ router.put(
   '/updateDevice/:id',
   validate(objectIdParamSchema, 'params'),
   authenticateToken as express.RequestHandler,
+  validate(updateDeviceSchema) as express.RequestHandler,
   updateDevice as unknown as express.RequestHandler,
 );
 router.delete(

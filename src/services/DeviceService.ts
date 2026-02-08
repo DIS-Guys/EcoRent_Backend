@@ -1,31 +1,33 @@
 import { deleteFromS3, uploadToS3 } from '../config/s3';
-import { DeviceData, DeviceImage } from '../interfaces/device.interface';
+import { DeviceImage } from '../interfaces/device.interface';
 import Device, { IDevice } from '../models/Device';
-import { parseFormData } from '../utils/parseFormData';
 
 export class DeviceService {
   static async createDevice(
-    deviceInfo: DeviceData,
+    parsedDeviceInfo: Record<string, unknown>,
     deviceImages: Express.Multer.File[],
     userId: string,
   ) {
-    const parsedDeviceInfo = parseFormData(deviceInfo);
-
     const uploadedImages = await Promise.all(
       deviceImages.map((file) => uploadToS3(file)),
     );
     const imageUrls = uploadedImages.map((image) => image.Location);
 
+    const { imageDimensions, ...deviceData } = parsedDeviceInfo;
+
+    const typedDimensions = imageDimensions as {
+      width: number;
+      height: number;
+    }[];
+
     const images: DeviceImage[] = imageUrls.map((url, index) => ({
       url,
-      width: parsedDeviceInfo.imageDimensions[index].width,
-      height: parsedDeviceInfo.imageDimensions[index].height,
+      width: typedDimensions[index].width,
+      height: typedDimensions[index].height,
     }));
 
-    delete parsedDeviceInfo.imageDimensions;
-
     const device: IDevice = new Device({
-      ...parsedDeviceInfo,
+      ...deviceData,
       isInRent: false,
       images,
       ownerId: userId,
