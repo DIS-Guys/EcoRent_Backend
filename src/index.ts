@@ -21,7 +21,7 @@ const limiter = rateLimit({
   max: 100,
   standardHeaders: true,
   legacyHeaders: false,
-  message: { message: 'Забагато запитів, спробуйте пізніше.' },
+  message: { message: 'Too many requests, please try again later.' },
 });
 app.use(limiter);
 
@@ -40,11 +40,11 @@ app.use('/api/paymentCards', paymentCardRoutes);
 const startServer = async () => {
   try {
     await connectDB();
-    console.log('MongoDB підключено');
+    console.log('MongoDB connected');
 
-    app.listen(PORT, () => console.log(`Сервер працює на порту ${PORT}`));
+    app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
   } catch (error) {
-    console.error('Помилка підключення до бази даних', error);
+    console.error('Database connection error', error);
     process.exit(1);
   }
 };

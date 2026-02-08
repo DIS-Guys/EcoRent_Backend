@@ -56,7 +56,7 @@ describe('User Controller', () => {
       });
 
       expect(response.status).toBe(201);
-      expect(response.body.message).toBe('Користувача зареєстровано успішно.');
+      expect(response.body.message).toBe('User registered successfully.');
     });
 
     it('should return 400 if user already exists', async () => {
@@ -73,7 +73,7 @@ describe('User Controller', () => {
 
       expect(response.status).toBe(400);
       expect(response.body.message).toBe(
-        'Користувач із таким email вже існує.',
+        'User with this email already exists.',
       );
     });
   });
@@ -91,7 +91,7 @@ describe('User Controller', () => {
 
       expect(response.status).toBe(200);
       expect(response.body.token).toBe('mock-token');
-      expect(response.body.message).toBe('Успішний вхід.');
+      expect(response.body.message).toBe('Login successful.');
     });
 
     it('should return 404 if user not found', async () => {
@@ -105,7 +105,7 @@ describe('User Controller', () => {
       });
 
       expect(response.status).toBe(404);
-      expect(response.body.message).toBe('Користувача не знайдено.');
+      expect(response.body.message).toBe('User not found.');
     });
   });
 
@@ -132,7 +132,7 @@ describe('User Controller', () => {
       const response = await request(app).get('/api/auth/getUser');
 
       expect(response.status).toBe(404);
-      expect(response.body.message).toBe('Користувача не знайдено.');
+      expect(response.body.message).toBe('User not found.');
     });
   });
 
@@ -151,7 +151,7 @@ describe('User Controller', () => {
       });
 
       expect(response.status).toBe(200);
-      expect(response.body.message).toBe('Дані користувача оновлено.');
+      expect(response.body.message).toBe('User data updated.');
       expect(response.body.updatedUser.name).toBe('Updated Name');
     });
 
@@ -165,7 +165,7 @@ describe('User Controller', () => {
       });
 
       expect(response.status).toBe(404);
-      expect(response.body.message).toBe('Користувача не знайдено.');
+      expect(response.body.message).toBe('User not found.');
     });
   });
 
@@ -179,7 +179,7 @@ describe('User Controller', () => {
       });
 
       expect(response.status).toBe(200);
-      expect(response.body.message).toBe('Успішна зміна паролю.');
+      expect(response.body.message).toBe('Password changed successfully.');
     });
 
     it('should return 400 if old password is incorrect', async () => {
@@ -193,7 +193,7 @@ describe('User Controller', () => {
       });
 
       expect(response.status).toBe(400);
-      expect(response.body.message).toBe('Старий пароль невірний.');
+      expect(response.body.message).toBe('Old password is incorrect.');
     });
   });
 
@@ -204,7 +204,7 @@ describe('User Controller', () => {
       const response = await request(app).delete('/api/auth/deleteUser');
 
       expect(response.status).toBe(200);
-      expect(response.body.message).toBe('Користувача видалено успішно.');
+      expect(response.body.message).toBe('User deleted successfully.');
     });
 
     it('should return 404 if user not found', async () => {
@@ -215,7 +215,7 @@ describe('User Controller', () => {
       const response = await request(app).delete('/api/auth/deleteUser');
 
       expect(response.status).toBe(404);
-      expect(response.body.message).toBe('Користувача не знайдено.');
+      expect(response.body.message).toBe('User not found.');
     });
   });
 });

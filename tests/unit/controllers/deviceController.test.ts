@@ -61,7 +61,7 @@ describe('Device Controller', () => {
         .send({ name: 'Device 1', description: 'Test Device' });
 
       expect(response.status).toBe(201);
-      expect(response.body.message).toBe('Пристрій додано.');
+      expect(response.body.message).toBe('Device added.');
       expect(response.body.device.name).toBe('Device 1');
     });
 
@@ -75,7 +75,7 @@ describe('Device Controller', () => {
         .send({ name: 'Device 1', description: 'Test Device' });
 
       expect(response.status).toBe(500);
-      expect(response.body.message).toBe('Помилка сервера.');
+      expect(response.body.message).toBe('Server error.');
     });
   });
 
@@ -100,7 +100,7 @@ describe('Device Controller', () => {
       const response = await request(app).get('/api/devices/getDevice/1');
 
       expect(response.status).toBe(500);
-      expect(response.body.message).toBe('Помилка сервера.');
+      expect(response.body.message).toBe('Server error.');
     });
   });
 
@@ -124,7 +124,7 @@ describe('Device Controller', () => {
       const response = await request(app).get('/api/devices/getOwnerDevices');
 
       expect(response.status).toBe(500);
-      expect(response.body.message).toBe('Помилка сервера.');
+      expect(response.body.message).toBe('Server error.');
     });
   });
 
@@ -140,7 +140,7 @@ describe('Device Controller', () => {
         .send({ name: 'Updated Device' });
 
       expect(response.status).toBe(200);
-      expect(response.body.message).toBe('Дані пристрою оновлено.');
+      expect(response.body.message).toBe('Device data updated.');
       expect(response.body.updatedDevice.name).toBe('Updated Device');
     });
 
@@ -154,7 +154,7 @@ describe('Device Controller', () => {
         .send({ name: 'Updated Device' });
 
       expect(response.status).toBe(404);
-      expect(response.body.message).toBe('Пристрій не знайдено.');
+      expect(response.body.message).toBe('Device not found.');
     });
   });
 
@@ -165,7 +165,7 @@ describe('Device Controller', () => {
       const response = await request(app).delete('/api/devices/deleteDevice/1');
 
       expect(response.status).toBe(200);
-      expect(response.body.message).toBe('Пристрій успішно видалено.');
+      expect(response.body.message).toBe('Device deleted successfully.');
     });
 
     it('should return 404 if device not found', async () => {
@@ -176,7 +176,7 @@ describe('Device Controller', () => {
       const response = await request(app).delete('/api/devices/deleteDevice/1');
 
       expect(response.status).toBe(404);
-      expect(response.body.message).toBe('Пристрій не знайдено.');
+      expect(response.body.message).toBe('Device not found.');
     });
   });
 });

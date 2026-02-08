@@ -1,18 +1,18 @@
 import { z } from 'zod';
 
 export const registerSchema = z.object({
-  name: z.string().min(1, "Ім'я є обов'язковим.").max(50),
-  surname: z.string().min(1, "Прізвище є обов'язковим.").max(50),
-  email: z.email('Невірний формат email.'),
+  name: z.string().min(1, 'Name is required.').max(50),
+  surname: z.string().min(1, 'Surname is required.').max(50),
+  email: z.email('Invalid email format.'),
   password: z
     .string()
-    .min(6, 'Пароль має містити щонайменше 6 символів.')
+    .min(6, 'Password must contain at least 6 characters.')
     .max(128),
 });
 
 export const loginSchema = z.object({
-  email: z.email('Невірний формат email.'),
-  password: z.string().min(1, "Пароль є обов'язковим."),
+  email: z.email('Invalid email format.'),
+  password: z.string().min(1, 'Password is required.'),
 });
 
 export const updateUserSchema = z
@@ -30,9 +30,9 @@ export const updateUserSchema = z
   .strict();
 
 export const changePasswordSchema = z.object({
-  oldPassword: z.string().min(1, "Старий пароль є обов'язковим."),
+  oldPassword: z.string().min(1, 'Old password is required.'),
   newPassword: z
     .string()
-    .min(6, 'Новий пароль має містити щонайменше 6 символів.')
+    .min(6, 'New password must contain at least 6 characters.')
     .max(128),
 });

@@ -8,15 +8,15 @@ export const createUser = async (req: Request, res: Response) => {
   try {
     await UserService.createUser(name, surname, email, password);
 
-    res.status(201).json({ message: 'Користувача зареєстровано успішно.' });
+    res.status(201).json({ message: 'User registered successfully.' });
   } catch (error) {
     if (error instanceof Error && error.message === 'BAD_REQUEST') {
       return res
         .status(400)
-        .json({ message: 'Користувач із таким email вже існує.' });
+        .json({ message: 'User with this email already exists.' });
     }
     console.error('createUser error:', error);
-    res.status(500).json({ message: 'Помилка сервера.' });
+    res.status(500).json({ message: 'Server error.' });
   }
 };
 
@@ -26,16 +26,16 @@ export const authenticateUser = async (req: Request, res: Response) => {
   try {
     const token = await UserService.authenticateUser(email, password);
 
-    res.json({ token, message: 'Успішний вхід.' });
+    res.json({ token, message: 'Login successful.' });
   } catch (error) {
     if (error instanceof Error && error.message === 'NOT_FOUND') {
-      return res.status(404).json({ message: 'Користувача не знайдено.' });
+      return res.status(404).json({ message: 'User not found.' });
     }
     if (error instanceof Error && error.message === 'BAD_REQUEST') {
-      return res.status(400).json({ message: 'Невірний пароль.' });
+      return res.status(400).json({ message: 'Invalid password.' });
     }
     console.error('authenticateUser error:', error);
-    res.status(500).json({ message: 'Помилка сервера.' });
+    res.status(500).json({ message: 'Server error.' });
   }
 };
 
@@ -48,10 +48,10 @@ export const getUser = async (req: AuthenticatedRequest, res: Response) => {
     res.status(200).json(user);
   } catch (error) {
     if (error instanceof Error && error.message === 'NOT_FOUND') {
-      return res.status(404).json({ message: 'Користувача не знайдено.' });
+      return res.status(404).json({ message: 'User not found.' });
     }
     console.error('getUser error:', error);
-    res.status(500).json({ message: 'Помилка сервера.' });
+    res.status(500).json({ message: 'Server error.' });
   }
 };
 
@@ -62,15 +62,13 @@ export const updateUser = async (req: AuthenticatedRequest, res: Response) => {
   try {
     const updatedUser = await UserService.updateUser(id, updates);
 
-    res
-      .status(200)
-      .json({ message: 'Дані користувача оновлено.', updatedUser });
+    res.status(200).json({ message: 'User data updated.', updatedUser });
   } catch (error) {
     if (error instanceof Error && error.message === 'NOT_FOUND') {
-      return res.status(404).json({ message: 'Користувача не знайдено.' });
+      return res.status(404).json({ message: 'User not found.' });
     }
     console.error('updateUser error:', error);
-    res.status(500).json({ message: 'Помилка сервера.' });
+    res.status(500).json({ message: 'Server error.' });
   }
 };
 
@@ -84,16 +82,16 @@ export const changePassword = async (
   try {
     await UserService.changePassword(id, oldPassword, newPassword);
 
-    res.status(200).json({ message: 'Успішна зміна паролю.' });
+    res.status(200).json({ message: 'Password changed successfully.' });
   } catch (error) {
     if (error instanceof Error && error.message === 'NOT_FOUND') {
-      return res.status(404).json({ message: 'Користувача не знайдено.' });
+      return res.status(404).json({ message: 'User not found.' });
     }
     if (error instanceof Error && error.message === 'BAD_REQUEST') {
-      return res.status(400).json({ message: 'Старий пароль невірний.' });
+      return res.status(400).json({ message: 'Old password is incorrect.' });
     }
     console.error('changePassword error:', error);
-    res.status(500).json({ message: 'Помилка сервера.' });
+    res.status(500).json({ message: 'Server error.' });
   }
 };
 
@@ -103,12 +101,12 @@ export const deleteUser = async (req: AuthenticatedRequest, res: Response) => {
   try {
     await UserService.deleteUser(id);
 
-    res.status(200).json({ message: 'Користувача видалено успішно.' });
+    res.status(200).json({ message: 'User deleted successfully.' });
   } catch (error) {
     if (error instanceof Error && error.message === 'NOT_FOUND') {
-      return res.status(404).json({ message: 'Користувача не знайдено.' });
+      return res.status(404).json({ message: 'User not found.' });
     }
     console.error('deleteUser error:', error);
-    res.status(500).json({ message: 'Помилка сервера.' });
+    res.status(500).json({ message: 'Server error.' });
   }
 };

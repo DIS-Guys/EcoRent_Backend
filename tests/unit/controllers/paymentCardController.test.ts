@@ -63,7 +63,7 @@ describe('Payment Card Controller', () => {
 
       expect(response.status).toBe(201);
       expect(response.body).toEqual({
-        message: 'Платіжна картка додана.',
+        message: 'Payment card added.',
         paymentCard: {
           id: 'card123',
           cardNumber: '1234567812345678',
@@ -89,7 +89,7 @@ describe('Payment Card Controller', () => {
         });
 
       expect(response.status).toBe(500);
-      expect(response.body).toHaveProperty('message', 'Помилка сервера.');
+      expect(response.body).toHaveProperty('message', 'Server error.');
     });
   });
 
@@ -133,14 +133,14 @@ describe('Payment Card Controller', () => {
         .set('Authorization', `Bearer ${mockToken}`);
 
       expect(response.status).toBe(500);
-      expect(response.body).toHaveProperty('message', 'Помилка сервера.');
+      expect(response.body).toHaveProperty('message', 'Server error.');
     });
   });
 
   describe('DELETE /api/paymentCards/deletePaymentCard/:id', () => {
     it('should delete a payment card and return 200', async () => {
       (PaymentCardService.deletePaymentCard as jest.Mock).mockResolvedValue({
-        message: 'Платіжну картку успішно видалено.',
+        message: 'Payment card deleted successfully.',
       });
 
       const response = await request(app)
@@ -149,7 +149,7 @@ describe('Payment Card Controller', () => {
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual({
-        message: 'Платіжну картку успішно видалено.',
+        message: 'Payment card deleted successfully.',
       });
     });
 
@@ -164,7 +164,7 @@ describe('Payment Card Controller', () => {
 
       expect(response.status).toBe(404);
       expect(response.body).toEqual({
-        message: 'Платіжну картку не знайдено.',
+        message: 'Payment card not found.',
       });
     });
 
@@ -179,7 +179,7 @@ describe('Payment Card Controller', () => {
 
       expect(response.status).toBe(403);
       expect(response.body).toEqual({
-        message: 'Відмовлено у доступі.',
+        message: 'Access denied.',
       });
     });
 
@@ -193,7 +193,7 @@ describe('Payment Card Controller', () => {
         .set('Authorization', `Bearer ${mockToken}`);
 
       expect(response.status).toBe(500);
-      expect(response.body).toHaveProperty('message', 'Помилка сервера.');
+      expect(response.body).toHaveProperty('message', 'Server error.');
     });
   });
 });

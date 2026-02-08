@@ -34,7 +34,7 @@ describe('Ticket Controller', () => {
 
       expect(res.status).toBe(201);
       expect(res.body).toEqual({
-        message: 'Тікет створено.',
+        message: 'Ticket created.',
         ticket: mockTicket,
       });
       expect(TicketService.createTicket).toHaveBeenCalledWith(
@@ -53,7 +53,7 @@ describe('Ticket Controller', () => {
         .send({ userEmail: 'test@example.com', message: 'Test message' });
 
       expect(res.status).toBe(500);
-      expect(res.body).toHaveProperty('message', 'Помилка сервера.');
+      expect(res.body).toHaveProperty('message', 'Server error.');
     });
   });
 
@@ -81,7 +81,7 @@ describe('Ticket Controller', () => {
       const res = await request(app).get('/api/tickets/getTicket/1');
 
       expect(res.status).toBe(404);
-      expect(res.body).toHaveProperty('message', 'Тікет не знайдено.');
+      expect(res.body).toHaveProperty('message', 'Ticket not found.');
     });
 
     it('should return 500 for server errors', async () => {
@@ -92,7 +92,7 @@ describe('Ticket Controller', () => {
       const res = await request(app).get('/api/tickets/getTicket/1');
 
       expect(res.status).toBe(500);
-      expect(res.body).toHaveProperty('message', 'Помилка сервера.');
+      expect(res.body).toHaveProperty('message', 'Server error.');
     });
   });
 
@@ -119,7 +119,7 @@ describe('Ticket Controller', () => {
       const res = await request(app).get('/api/tickets/getAllTickets');
 
       expect(res.status).toBe(500);
-      expect(res.body).toHaveProperty('message', 'Помилка сервера.');
+      expect(res.body).toHaveProperty('message', 'Server error.');
     });
   });
 
@@ -130,7 +130,10 @@ describe('Ticket Controller', () => {
       const res = await request(app).delete('/api/tickets/deleteTicket/1');
 
       expect(res.status).toBe(200);
-      expect(res.body).toHaveProperty('message', 'Тікет успішно видалено.');
+      expect(res.body).toHaveProperty(
+        'message',
+        'Ticket deleted successfully.',
+      );
       expect(TicketService.deleteTicket).toHaveBeenCalledWith('1');
     });
 
@@ -142,7 +145,7 @@ describe('Ticket Controller', () => {
       const res = await request(app).delete('/api/tickets/deleteTicket/1');
 
       expect(res.status).toBe(404);
-      expect(res.body).toHaveProperty('message', 'Тікет не знайдено.');
+      expect(res.body).toHaveProperty('message', 'Ticket not found.');
     });
 
     it('should return 500 for server errors', async () => {
@@ -153,7 +156,7 @@ describe('Ticket Controller', () => {
       const res = await request(app).delete('/api/tickets/deleteTicket/1');
 
       expect(res.status).toBe(500);
-      expect(res.body).toHaveProperty('message', 'Помилка сервера.');
+      expect(res.body).toHaveProperty('message', 'Server error.');
     });
   });
 });

@@ -14,10 +14,10 @@ export const addDevice = async (req: AuthenticatedRequest, res: Response) => {
       req.user.id,
     );
 
-    res.status(201).json({ message: 'Пристрій додано.', device });
+    res.status(201).json({ message: 'Device added.', device });
   } catch (error) {
     console.error('addDevice error:', error);
-    res.status(500).json({ message: 'Помилка сервера.' });
+    res.status(500).json({ message: 'Server error.' });
   }
 };
 
@@ -30,7 +30,7 @@ export const getDevice = async (req: Request, res: Response) => {
     res.status(200).json(device);
   } catch (error) {
     console.error('getDevice error:', error);
-    res.status(500).json({ message: 'Помилка сервера.' });
+    res.status(500).json({ message: 'Server error.' });
   }
 };
 
@@ -46,7 +46,7 @@ export const getDevicesByOwnerId = async (
     res.status(200).json(devices);
   } catch (error) {
     console.error('getDevicesByOwnerId error:', error);
-    res.status(500).json({ message: 'Помилка сервера.' });
+    res.status(500).json({ message: 'Server error.' });
   }
 };
 
@@ -57,7 +57,7 @@ export const getAllDevices = async (req: Request, res: Response) => {
     res.status(200).json(devices);
   } catch (error) {
     console.error('getAllDevices error:', error);
-    res.status(500).json({ message: 'Помилка сервера.' });
+    res.status(500).json({ message: 'Server error.' });
   }
 };
 
@@ -76,16 +76,16 @@ export const updateDevice = async (
       ownerId,
     );
 
-    res.status(200).json({ message: 'Дані пристрою оновлено.', updatedDevice });
+    res.status(200).json({ message: 'Device data updated.', updatedDevice });
   } catch (error) {
     if (error instanceof Error && error.message === 'NOT_FOUND') {
-      return res.status(404).json({ message: 'Пристрій не знайдено.' });
+      return res.status(404).json({ message: 'Device not found.' });
     }
     if (error instanceof Error && error.message === 'FORBIDDEN') {
-      return res.status(403).json({ message: 'Відмовлено у доступі.' });
+      return res.status(403).json({ message: 'Access denied.' });
     }
     console.error('updateDevice error:', error);
-    res.status(500).json({ message: 'Помилка сервера.' });
+    res.status(500).json({ message: 'Server error.' });
   }
 };
 
@@ -99,15 +99,15 @@ export const deleteDevice = async (
   try {
     await DeviceService.deleteDevice(id, ownerId);
 
-    res.status(200).json({ message: 'Пристрій успішно видалено.' });
+    res.status(200).json({ message: 'Device deleted successfully.' });
   } catch (error) {
     if (error instanceof Error && error.message === 'NOT_FOUND') {
-      return res.status(404).json({ message: 'Пристрій не знайдено.' });
+      return res.status(404).json({ message: 'Device not found.' });
     }
     if (error instanceof Error && error.message === 'FORBIDDEN') {
-      return res.status(403).json({ message: 'Відмовлено у доступі.' });
+      return res.status(403).json({ message: 'Access denied.' });
     }
     console.error('deleteDevice error:', error);
-    res.status(500).json({ message: 'Помилка сервера.' });
+    res.status(500).json({ message: 'Server error.' });
   }
 };

@@ -7,10 +7,10 @@ export const createTicket = async (req: Request, res: Response) => {
   try {
     const ticket = await TicketService.createTicket(userEmail, message);
 
-    res.status(201).json({ message: 'Тікет створено.', ticket });
+    res.status(201).json({ message: 'Ticket created.', ticket });
   } catch (error) {
     console.error('createTicket error:', error);
-    res.status(500).json({ message: 'Помилка сервера.' });
+    res.status(500).json({ message: 'Server error.' });
   }
 };
 
@@ -23,10 +23,10 @@ export const getTicket = async (req: Request, res: Response) => {
     res.status(200).json(ticket);
   } catch (error) {
     if (error instanceof Error && error.message === 'NOT_FOUND') {
-      return res.status(404).json({ message: 'Тікет не знайдено.' });
+      return res.status(404).json({ message: 'Ticket not found.' });
     }
     console.error('getTicket error:', error);
-    res.status(500).json({ message: 'Помилка сервера.' });
+    res.status(500).json({ message: 'Server error.' });
   }
 };
 
@@ -37,7 +37,7 @@ export const getAllTickets = async (req: Request, res: Response) => {
     res.status(200).json(tickets);
   } catch (error) {
     console.error('getAllTickets error:', error);
-    res.status(500).json({ message: 'Помилка сервера.' });
+    res.status(500).json({ message: 'Server error.' });
   }
 };
 
@@ -47,12 +47,12 @@ export const deleteTicket = async (req: Request, res: Response) => {
   try {
     await TicketService.deleteTicket(id);
 
-    res.status(200).json({ message: 'Тікет успішно видалено.' });
+    res.status(200).json({ message: 'Ticket deleted successfully.' });
   } catch (error) {
     if (error instanceof Error && error.message === 'NOT_FOUND') {
-      return res.status(404).json({ message: 'Тікет не знайдено.' });
+      return res.status(404).json({ message: 'Ticket not found.' });
     }
     console.error('deleteTicket error:', error);
-    res.status(500).json({ message: 'Помилка сервера.' });
+    res.status(500).json({ message: 'Server error.' });
   }
 };

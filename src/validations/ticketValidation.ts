@@ -1,9 +1,9 @@
 import { z } from 'zod';
 
 export const createTicketSchema = z.object({
-  userEmail: z.string().email('Невірний формат email.'),
+  userEmail: z.email('Invalid email format.'),
   message: z
     .string()
-    .min(1, "Повідомлення є обов'язковим.")
-    .max(2000, 'Повідомлення занадто довге.'),
+    .min(1, 'Message is required.')
+    .max(2000, 'Message is too long.'),
 });
