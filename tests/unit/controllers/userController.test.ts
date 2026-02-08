@@ -44,6 +44,14 @@ app.delete(
 );
 
 describe('User Controller', () => {
+  beforeAll(() => {
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+  });
+
+  afterAll(() => {
+    (console.error as jest.Mock).mockRestore();
+  });
+
   describe('POST /api/auth/register', () => {
     it('should register user successfully', async () => {
       (UserService.createUser as jest.Mock).mockResolvedValueOnce(true);

@@ -19,6 +19,14 @@ app.delete('/api/tickets/deleteTicket/:id', deleteTicket as RequestHandler);
 jest.mock('../../../src/services/TicketService');
 
 describe('Ticket Controller', () => {
+  beforeAll(() => {
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+  });
+
+  afterAll(() => {
+    (console.error as jest.Mock).mockRestore();
+  });
+
   describe('POST /api/tickets/createTicket', () => {
     it('should create a ticket and return it', async () => {
       const mockTicket = {

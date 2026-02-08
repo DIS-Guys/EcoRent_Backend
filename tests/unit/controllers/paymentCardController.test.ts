@@ -38,6 +38,14 @@ describe('Payment Card Controller', () => {
   const mockUser = { id: 'user123', name: 'Test User' };
   const mockToken = 'mockToken';
 
+  beforeAll(() => {
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+  });
+
+  afterAll(() => {
+    (console.error as jest.Mock).mockRestore();
+  });
+
   beforeEach(() => {
     jest.clearAllMocks();
   });

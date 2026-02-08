@@ -48,6 +48,14 @@ app.delete(
 );
 
 describe('Device Controller', () => {
+  beforeAll(() => {
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+  });
+
+  afterAll(() => {
+    (console.error as jest.Mock).mockRestore();
+  });
+
   describe('POST /api/devices/addDevice', () => {
     it('should add a device successfully', async () => {
       (DeviceService.createDevice as jest.Mock).mockResolvedValueOnce({
