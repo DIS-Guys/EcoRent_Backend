@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
+import { getEnv } from '../config/env';
 import User, { IUser } from '../models/User';
 import Device from '../models/Device';
 import PaymentCard from '../models/PaymentCard';
@@ -40,7 +41,7 @@ export class UserService {
 
     const token = jwt.sign(
       { id: user._id, name: user.name, surname: user.surname },
-      process.env.JWT_SECRET as string,
+      getEnv().jwtSecret,
       { expiresIn: '2 days' },
     );
 
@@ -88,7 +89,7 @@ export class UserService {
 
   static async deleteUser(id: string) {
     const deletedUser = await User.findByIdAndDelete(id);
-    
+
     await Device.deleteMany({ ownerId: id });
     await PaymentCard.deleteMany({ ownerId: id });
     if (!deletedUser) {

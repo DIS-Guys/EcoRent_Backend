@@ -1,10 +1,10 @@
 import mongoose from 'mongoose';
+import { getEnv } from './env';
 
 const connectDB = async () => {
   try {
-    await mongoose.connect(
-      `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWD}@ecorentdb.z3ct3.mongodb.net/ecorent`
-    );
+    const env = getEnv();
+    await mongoose.connect(env.mongoUri);
     console.log('MongoDB connected');
   } catch (error) {
     console.error('MongoDB connection error:', error);

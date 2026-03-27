@@ -1,24 +1,23 @@
 import express, { Express } from 'express';
-import dotenv from 'dotenv';
 import cors from 'cors';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import connectDB from './config/db';
+import { getEnv } from './config/env';
 import authRoutes from './routes/userRouter';
 import deviceRoutes from './routes/deviceRouter';
 import ticketsRoutes from './routes/ticketRouter';
 import paymentCardRoutes from './routes/paymentCardRouter';
 
-dotenv.config();
+const env = getEnv();
 
 const app: Express = express();
-const PORT = process.env.PORT || 3000;
 
 app.use(helmet());
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: parseInt(process.env.RATE_LIMIT_MAX || '1000', 10),
+  max: env.rateLimitMax,
   standardHeaders: true,
   legacyHeaders: false,
   message: { message: 'Too many requests, please try again later.' },
@@ -27,7 +26,7 @@ app.use(limiter);
 
 app.use(
   cors({
-    origin: '*',
+    origin: env.corsOrigins,
     methods: 'GET,POST,PUT,DELETE',
   }),
 );
@@ -42,7 +41,9 @@ const startServer = async () => {
     await connectDB();
     console.log('MongoDB connected');
 
-    app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
+    app.listen(env.port, () =>
+      console.log(`Server is running on port ${env.port}`),
+    );
   } catch (error) {
     console.error('Database connection error', error);
     process.exit(1);

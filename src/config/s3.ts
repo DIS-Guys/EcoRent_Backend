@@ -3,31 +3,22 @@ import {
   PutObjectCommand,
   DeleteObjectCommand,
 } from '@aws-sdk/client-s3';
-import { v4 as uuidv4 } from 'uuid';
-
-const BUCKET_NAME = 'eco-rent-images';
+import { randomUUID } from 'crypto';
+import { getEnv } from './env';
 
 let s3: S3Client | null = null;
 
-const shouldMockS3 = () => {
-  if (process.env.MOCK_S3 === 'true') {
-    return true;
-  }
-
-  return (
-    !process.env.AWS_REGION ||
-    !process.env.AWS_ACCESS_KEY_ID ||
-    !process.env.AWS_SECRET_ACCESS_KEY
-  );
-};
+const shouldMockS3 = () => getEnv().mockS3;
 
 const getS3Client = () => {
   if (!s3) {
+    const env = getEnv();
+
     s3 = new S3Client({
-      region: process.env.AWS_REGION,
+      region: env.awsRegion,
       credentials: {
-        accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
-        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
+        accessKeyId: env.awsAccessKeyId as string,
+        secretAccessKey: env.awsSecretAccessKey as string,
       },
     });
   }
@@ -42,24 +33,34 @@ const buildMockLocation = (file: Express.Multer.File) => {
   return `data:${mimeType};base64,${base64}`;
 };
 
+const extractS3KeyFromUrl = (imageUrl: string) => {
+  try {
+    const parsedUrl = new URL(imageUrl);
+    return decodeURIComponent(parsedUrl.pathname.replace(/^\/+/, ''));
+  } catch {
+    return imageUrl.replace(/^\/+/, '');
+  }
+};
+
 export const uploadToS3 = async (file: Express.Multer.File) => {
   if (shouldMockS3()) {
     return { Location: buildMockLocation(file) };
   }
 
+  const env = getEnv();
   const compressedFileName = file.originalname.trim().split(' ').join('');
-  const key = `${uuidv4()}-${compressedFileName}`;
+  const key = `${randomUUID()}-${compressedFileName}`;
 
   await getS3Client().send(
     new PutObjectCommand({
-      Bucket: BUCKET_NAME,
+      Bucket: env.s3Bucket,
       Key: key,
       Body: file.buffer,
       ContentType: file.mimetype,
     }),
   );
 
-  const location = `https://${BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`;
+  const location = `https://${env.s3Bucket}.s3.${env.awsRegion}.amazonaws.com/${key}`;
 
   return { Location: location };
 };
@@ -71,8 +72,8 @@ export const deleteFromS3 = async (imageUrl: string) => {
 
   await getS3Client().send(
     new DeleteObjectCommand({
-      Bucket: BUCKET_NAME,
-      Key: imageUrl.split('/').pop() as string,
+      Bucket: getEnv().s3Bucket,
+      Key: extractS3KeyFromUrl(imageUrl),
     }),
   );
 };
